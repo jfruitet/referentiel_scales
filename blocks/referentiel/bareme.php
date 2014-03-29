@@ -46,7 +46,7 @@ require_once $CFG->libdir.'/gradelib.php';
 // require_once('pass_form.php');  // mot de passe pour acceder a l'edition
 
 
-
+// <a href="http://localhost/moodle253/blocks/referentiel/bareme.php?blockid=18&amp;courseid=2&amp;occurrenceid=1&amp;scaleid=1&amp;mode=editbareme&amp;sesskey=zy5BMQOC1z">
 
 
 // Check for all required variables.
@@ -125,63 +125,6 @@ require_login($course);
            	// referentiel_affiche_bareme($rec_bareme);
 			// verifer si le mot de passe est fourni
 
-/**************
- * pass
- ** desactive
-   			if (!$pass  // si cest un admin il outrepasse car pass==1
-				&& (( isset($occurrence_object->referentiel->pass_referentiel)
-				&&
-   				($occurrence_object->referentiel->pass_referentiel!=''))
-   				|| $isauthor
-   				|| $isadmin
-   				)){
-				// demander le mot de passe
-				$options = array('pass'=>$occurrence_object->referentiel->pass_referentiel, 'isadmin'=>$isadmin, 'isauthor'=>$isauthor);
-				if ($pass_form = new pass_form(null, array('occurrenceid'=>$occurrence_object->referentiel->id, 'blockid'=>$blockid, 'courseid'=>$courseid, 'options'=>$options))){
-					if($pass_form->is_cancelled()) {
-  						// Cancelled forms redirect to the view main page.
-         redirect($viewurl);
-						die();
-					}
-					else if ($formdata=$pass_form->get_data()) {
-    					// DEBUG
-						// print_object($formdata);
-						// exit;
-						// le mot de passe est-il actif ?
-						// cette fonction est due au parametrage
-						if ((!$pass) && ($checkpass=='checkpass')){
-		    				if (!empty($formdata->pass_referentiel)){
-   								if (!empty($formdata->force_pass)){  // force EDITION
-       								$pass=referentiel_set_pass($occurrence_object->referentiel->id, $formdata->pass_referentiel);
-			            		}
-   	   							else{ // tester le mot de passe
-   									$pass=referentiel_check_pass($occurrence_object->referentiel, $formdata->pass_referentiel);
-   								}
-   								if (!$pass){
-   									// Abandonner
-               redirect($viewurl);
-    								die();
-			  					}
-   		    				}
-       						else{
-       							if (empty($formdata->force_pass)){  // empty password and not an admin or author connected
-	  								// Abandonner
-               redirect($viewurl);
-      									die();
-								}
-   							}
-						}
-					}
-					else {
-						// form didn't validate or this is the first display
-						echo $OUTPUT->header();
- 						$pass_form->display();
-						echo $OUTPUT->footer();
-						die();
-					}
-				}
-			}
-*****/
            	    // formulaire
                 //if ($bareme_form = new bareme_form(null, array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrence_object->referentiel->id, 'bareme'=>$rec_bareme->bareme, 'mode'=>$mode, 'options'=>array('pass'=>$pass,'details'=>1)))){
                 if ($bareme_form = new bareme_form(null, array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrence_object->referentiel->id, 'bareme'=>$rec_bareme->bareme, 'mode'=>$mode, 'options'=>array('details'=>1)))){
@@ -189,7 +132,8 @@ require_login($course);
    					    // Cancelled forms redirect to the view main page.
    					    redirect($baseurl);
 					   die();
-				    } else if ($formdata=$bareme_form->get_data()) {
+				    }
+					else if ($formdata=$bareme_form->get_data()) {
                         referentiel_set_bareme($formdata);
                         //exit;
                         // $baseurl = new moodle_url('/blocks/referentiel/bareme.php', array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrenceid, 'pass'=>$formdata->pass));
@@ -248,24 +192,60 @@ require_login($course);
     	$params=array("blockid"=>$blockid, "courseid"=>$courseid, "occurrenceid"=>$occurrenceid, "baremeid"=>0, "scaleid"=>$scaleid);
 		$rec_bareme = new bareme_class($params);
 		if (($mode=='editbareme') &&  confirm_sesskey()){
+			// DEBUG
+			echo "<br />DEBUG :: bareme.php :: 251 :: COURSEID:$course->id, OccurrenceID: $occurrenceid, SCALEID:$scaleid, MODE:$mode<br />BAREM<br />\n";
+            print_object($rec_bareme);
+/*
+bareme_class Object
+(
+    [occurrenceid] => 1
+    [courseid] => 2
+    [blockid] => 18
+    [baremeid] =>
+    [bareme] => object Object
+        (
+            [scaleid] => 1
+            [name] => LOMER
+            [scale] => NA, EA, A, E
+            [maxscale] => 3
+            [threshold] => 2
+            [description] => <p>NA : Non acquis</p>
+<p>EA : En cours d'acquisition</p>
+<p>A : Acquis</p>
+<p>E : Excellent</p>
+            [descriptionformat] => 1
+            [icons] =>
+            [labels] => NA, EA, A, E
+            [timemodified] => 1396131366
+        )
+
+)
+*/
         	if (!empty($rec_bareme)){
-                //$rec_bareme->affiche();
-                // formulaire
-        		if ($bareme_form = new bareme_form(null, array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrence_object->referentiel->id, 'bareme'=>$rec_bareme->bareme, 'mode'=>$mode, 'options'=>array('details'=>1)))){
-				    if ($bareme_form->is_cancelled()) {
-   					    // Cancelled forms redirect to the view main page.
-   					    redirect($baseurl);
-                        die();
-				    } 
-                    else if ($formdata=$bareme_form->get_data()) {
-                        referentiel_set_bareme($formdata);
-                        //exit;
-                        // $baseurl = new moodle_url('/blocks/referentiel/bareme.php', array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrenceid, 'pass'=>$formdata->pass));
-                        $baseurl = new moodle_url('/blocks/referentiel/bareme.php', array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrenceid));
-                        redirect($baseurl);
-           			    die();
-				    }
-                    else{
+	            // $rec_bareme->affiche();
+				//exit;
+        	    // formulaire
+        		$bareme_form = new bareme_form(null, array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrence_object->referentiel->id, 'bareme'=>$rec_bareme->bareme, 'mode'=>$mode, 'options'=>array('details'=>1)));
+	            //echo "<br />DEBUG :: bareme.php :: 261 :: BAREME_FORM<br />\n";
+    	        //print_object($bareme_form);
+				//exit;
+				if ($bareme_form){
+					if ($bareme_form->is_cancelled()) {
+   						// Cancelled forms redirect to the view main page.
+   						redirect($baseurl);
+            	        die();
+					}
+    	            else if ($formdata=$bareme_form->get_data()) {
+        	        	//echo "<br />DEBUG :: bareme.php :: 271 :: BAREME FORMDATA<br />\n";
+            	    	//print_object($formdata);
+						//exit;
+						referentiel_set_scale_2_bareme($formdata, $rec_bareme->bareme);
+	                    // $baseurl = new moodle_url('/blocks/referentiel/bareme.php', array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrenceid, 'pass'=>$formdata->pass));
+    	                $baseurl = new moodle_url('/blocks/referentiel/bareme.php', array('blockid'=>$blockid, 'courseid'=>$courseid, 'occurrenceid'=>$occurrenceid));
+        	            redirect($baseurl);
+           				die();
+					}
+	                else{
         			    // print_object($rec_bareme);
                         echo $OUTPUT->header();
 					    $occurrence_object->tabs($mode, $currenttab);
@@ -276,8 +256,8 @@ require_login($course);
 				        echo $OUTPUT->box_end();
 				        echo $OUTPUT->footer();
         				die();
-        			}
-			    }
+					}
+	    		}
             }
    		}  			
 	}

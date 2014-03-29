@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2013121101;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2014033000;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2012112900;        // Requires this Moodle version
+$plugin->release  = 'Block Referentiel v 10.00 for Moodle 2.4 et 2.5 with scale support - Release 2014-03-30';    // User-friendly date of release
 $plugin->component = 'block_referentiel';  // Full name of the plugin (used for diagnostics)

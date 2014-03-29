@@ -672,6 +672,7 @@ function referentiel_print_enqueue_activite(){
  *  output null                                                     *
 **/
 function referentiel_print_activite_detail($record_a, $context, $detail=true, $numero=0){
+global $CFG;
     $s='';
     $s0='';
     $s1='';
@@ -721,13 +722,13 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
             // consignes associées à une tâche
             $titre_task=referentiel_get_theme_task($ref_task);
             $info_task=referentiel_get_content_task($ref_task);
-            // $stask.=' <span class="light">'.get_string('task','referentiel').'</span>'."\n";
+            // $stask.='<br /><span class="light">'.get_string('task','referentiel').'</span>'."\n";
             if ($info_task!=''){
                 // lien vers la tâche
                 $stask.=' '.referentiel_affiche_overlib_texte($titre_task, $info_task)."\n";
             }
             // documents associés à une tâche
-            $stask.=referentiel_print_liste_documents_task($ref_task, referentiel_get_auteur_task($ref_task), $context)."\n";
+            $stask.=referentiel_print_liste_documents_task($ref_task, referentiel_get_auteur_task($ref_task), $context);
         }
 
 		$url_course=referentiel_get_course_link($ref_course);
@@ -737,9 +738,7 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
             referentiel_initialise_descriptions_items_referentiel($ref_referentiel);
         }
         $prioritaire=referentiel_activite_prioritaire($record_a);
-
-		// Affichage
-		$s0.='
+        $s0.='
 <a name="activite_'.$activite_id.'"></a>'."\n";
         if (!empty($prioritaire)){
             $s0.= '<div class="ref_affprioritaire">'."\n";
@@ -789,24 +788,45 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
 			else{
 				$s1.=get_string('not_approved','referentiel');
 			}
-        	$s1.='<br />'."\n";
+
 			if (isset($approved) && ($approved)){
 				$s1.=' <span class="valide">'."\n";
 			}
 			else{
 				$s1.=' <span class="invalide">'."\n";
 			}
-			$s1.='<span class="light">'.get_string('liste_codes_competence','referentiel').'</span>'."\n";
-			$s1.='<span class="bold">'.referentiel_affiche_liste_codes_competence('/',$competences_activite, $ref_referentiel)."\n";
-        	$s1.='</span></span>';
-			// $s1.=$stask;
+			$s1.='<br /><span class="light">'.get_string('liste_codes_competence','referentiel').'</span> <span class="bold">'."\n";
+			$s1.=referentiel_affiche_liste_codes_competence('/',$competences_activite, $ref_referentiel)."\n";
+        	$s1.='</span>'."\n";
+			if ($CFG->referentiel_use_scale){
+				require_once('lib_bareme.php');
+				if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($ref_referentiel)){
+					if ($bareme=referentiel_get_bareme($rec_assoc->refscaleid)){
+						$competences_bareme=referentiel_get_competences_activite($activite_id, $bareme->id);
+						if (empty($competences_bareme)){ // creer le bareme
+							$competences_bareme=referentiel_creer_competences_activite($record_a, $bareme);
+						}
+						if ($competences_bareme){
+                       		if ($detail){
+								$s1.='</span><br /><span class="light">'.get_string('evaluation','referentiel').'</span><br /><span class="white">'.referentiel_affiche_bareme_activite($competences_bareme, $bareme, true).'</span>'."\n";
+							}
+							else{
+								$s1.='</span><br /><span class="light">'.get_string('evaluation','referentiel').'</span><br /><span class="white">'.referentiel_affiche_bareme_activite($competences_bareme, $bareme, false).'</span>'."\n";
+							}
+						}
+					}
+				}
+			}
+       		$s1.='</span>'."\n";
+
+			//$s1.=$stask;
         	$s1.='<br /><span class="light">'.get_string('description','referentiel').'</span>'."\n";
             $s1.='<div class="ref_aff0">'.nl2br($description_activite).'</div>'."\n";
             $s1.='<span class="light">'.get_string('commentaire','referentiel').'</span>'."\n";
 			$s1.='<div class="ref_aff1">'.nl2br($commentaire_activite).'</div>'."\n";
         	$s1.= '</div>'."\n";
 		}
-		else{
+		else{      // NO details
         	if ($numero%2==0){
             	$s1.= '<div class="ref_affact1">';
         	}
@@ -819,7 +839,6 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
         	if (!empty($liste_groupes)){
             	$s1.=' &nbsp; <i>'.$liste_groupes.'</i>'."\n";
         	}
-
         	if (!empty($date_modif_student_info) && ($date_modif_student-$date_creation>1000)){
             	$s1.=' &nbsp; <span class="ital">'.$date_modif_student_info.'</span>'."\n";
         	}
@@ -837,23 +856,41 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
 			else{
 				$s1.=' &nbsp; '.get_string('not_approved','referentiel');
 			}
-        	// $s1.='<br />'."\n";
+
 			if (isset($approved) && ($approved)){
 				$s1.=' <span class="valide">'."\n";
 			}
 			else{
 				$s1.=' <span class="invalide">'."\n";
 			}
-			$s1.='<br /><span class="bold">'.referentiel_affiche_liste_codes_competence('/',$competences_activite, $ref_referentiel)."\n";
-        	$s1.='</span></span>';
-			// $s1.=$stask;
+			$s1.='<br /><span class="bold">'."\n";
+			$s1.=referentiel_affiche_liste_codes_competence('/',$competences_activite, $ref_referentiel)."\n";
+        	$s1.='</span>'."\n";
+			/*
+			if ($CFG->referentiel_use_scale){
+				require_once('lib_bareme.php');
+				if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($ref_referentiel)){
+					if ($bareme=referentiel_get_bareme($rec_assoc->refscaleid)){
+						$competences_bareme=referentiel_get_competences_activite($activite_id, $bareme->id);
+						if (empty($competences_bareme)){ // creer le bareme
+							$competences_bareme=referentiel_creer_competences_activite($record_a, $bareme);
+						}
+						if ($competences_bareme){
+							$s1.='</span><br /><span class="light">'.get_string('evaluation','referentiel').'</span><br /><span class="white">'.referentiel_affiche_bareme_activite($competences_bareme, $bareme, false).'</span>'."\n";
+						}
+					}
+				}
+			}
+			*/
+			$s1.='</span>'."\n";
+
+			//$s1.=$stask;
             $s1.='<div class="ref_aff0">'.nl2br($description_activite).'</div>'."\n";
 			if (!empty($commentaire_activite)){
 				$s1.='<div class="ref_aff1">'.nl2br($commentaire_activite).'</div>'."\n";
 			}
         	$s1.= '</div>'."\n";
 		}
-
         // charger les documents associes à l'activite courante
     	if (isset($activite_id) && ($activite_id>0)){
             $ref_activite=$activite_id; // plus pratique
@@ -866,7 +903,7 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
                 $s2.='<!-- DOCUMENTS -->
 <div class="ref_affdoc">'."\n";
                 if ($detail){
-					if ($nbressource>1){
+                	if ($nbressource>1){
                     	$s2.='<span class="bold">'.get_string('ressources_associees','referentiel',$nbressource).'</span>'."\n";
                 	}
                 	else{
@@ -885,7 +922,7 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
 			     		$cible_document='_blank'; // fenêtre cible
 				    }
 					else{
-					   $cible_document='';
+						$cible_document='';
     				}
 	       			if (isset($record_d->etiquette_document)){
 		      			$etiquette_document=$record_d->etiquette_document; // fenêtre cible
@@ -894,15 +931,28 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
 					   	$etiquette_document='';
     				}
 	       			if ($record_d->timestamp==0){
-                    	$date_creation='';
+                        $date_creation='';
                     }
 					else{
-                    	$date_creation=userdate($record_d->timestamp);
+                        $date_creation=userdate($record_d->timestamp);
 					}
+
+					// affichage de l'url
+					if (preg_match('/moddata\/referentiel/',$url_document)){
+			    			// l'URL doit être transformée
+                    		$data_r=new Object();
+							$data_r->id = $document_id;
+							$data_r->userid = $userid;
+							$data_r->author = $user_info;
+							$data_r->url = $url_document;
+							$data_r->filearea = 'document';
+        					$url_document = referentiel_m19_to_m2_file($data_r, $context, false, true);
+					}
+
 					if ($detail){
 						if ($date_modif<$record_d->timestamp){
                         	$s.='<span class="prioritaire">';
-                            $s.='<br /><span class="light">'.get_string('num','referentiel').'</span> <span class="ital">'.$document_id.'</i></span>
+                            $s.='<br /><span class="light">'.get_string('num','referentiel').'</span> <span class="ital">'.$document_id.'</i></span></span>
 &nbsp;
 <span class="light">'.get_string('date_creation','referentiel').'</span> : <span class="ital">'.$date_creation.'</span>
 &nbsp;
@@ -915,16 +965,16 @@ function referentiel_print_activite_detail($record_a, $context, $detail=true, $n
                             $s.='</span>'."\n";
                         }
                         else{
-                           	$s.='<br /><span class="light">'.get_string('num','referentiel').'</span> <span class="ital">'.$document_id.'</i></span>
+                            $s.='<br /><span class="light">'.get_string('num','referentiel').'</span> <span class="ital">'.$document_id.'</span>
 &nbsp;
-<span class="light">'.get_string('date_creation','referentiel').'</span> : '.$date_creation.'
+<span class="light">'.get_string('date_creation','referentiel').'</span> : <span class="ital">'.$date_creation.'</span>
 &nbsp;
 <span class="light">'.get_string('type','referentiel').'</span> : '.$type_document.'
 &nbsp;
 <span class="light">'.get_string('url','referentiel').'</span>  :
 ';
-                           	$s.=referentiel_affiche_url($url_document, $etiquette_document, $cible_document);
-                           	$s.='&nbsp; <span class="light">'.get_string('description','referentiel').'</span> : '.nl2br($description_document)."\n";
+                            $s.=referentiel_affiche_url($url_document, $etiquette_document, $cible_document);
+                            $s.='&nbsp; <span class="light">'.get_string('description','referentiel').'</span> : '.nl2br($description_document)."\n";
 						}
 					}
 					else{

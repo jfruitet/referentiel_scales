@@ -36,11 +36,123 @@
 require_once($CFG->dirroot.'/mod/referentiel/lib.php');
 require_once($CFG->dirroot.'/mod/referentiel/lib_referentiel.php');
 
+
+//------------------
+function referentiel_set_scale_2_bareme($form, $bareme){
+global $DB;
+/*
+bareme_class Object
+(
+    [occurrenceid] => 1
+    [courseid] => 2
+    [blockid] => 18
+    [baremeid] =>
+    [bareme] => object Object
+        (
+            [scaleid] => 1
+            [name] => LOMER
+            [scale] => NA, EA, A, E
+            [maxscale] => 3
+            [threshold] => 2
+            [description] => <p>NA : Non acquis</p>
+<p>EA : En cours d'acquisition</p>
+<p>A : Acquis</p>
+<p>E : Excellent</p>
+            [descriptionformat] => 1
+            [icons] =>
+            [labels] => NA, EA, A, E
+            [timemodified] => 1396131625
+        )
+
+)
+
+DEBUG :: bareme.php :: 271 :: BAREME FORMDATA
+stdClass Object
+(
+    [blockid] => 18
+    [courseid] => 2
+    [occurrenceid] => 1
+    [mode] => editbareme
+    [pass] => 1
+    [name] => LOMER
+    [seuilid] => 2
+    [iconscale_0] => <span style="color: red;">•</span>
+    [iconscale_1] => <span style="color: red;">•</span>
+    [iconscale_2] => <span style="color: green;">•</span>
+    [iconscale_3] => <span style="color: green;">•</span>
+    [scaleid] => 1
+    [submitbutton] => Enregistrer
+)
+*/
+
+	//DEBUG
+    //echo "<br />DEBUG :: ./block/referentiel/lib.php :: 44 <br />\n";
+	//print_object($form);
+	//exit;
+
+    if (!empty($form->scaleid) && !empty($bareme)){
+    	$bareme->icons='';
+		if ($tscales=explode(',',$bareme->scale)){
+       		while (list($key, $val) = each($tscales)) {
+            	//echo "$key => $val<br />\n";
+                $s='iconscale_'.$key;
+				if (!empty($form->$s)){
+                   	$bareme->icons.=$form->$s.',';
+				}
+			}
+		}
+		// DEBUG
+		//echo "<br /> ./blocks/referentiel/ lib.php :: 105\n";
+		//print_object($bareme);
+		//exit;
+		if ($bareme->id=$DB->insert_record('referentiel_scale', $bareme) && !empty($form->occurrenceid)){
+			referentiel_set_bareme_occurrence($bareme, $form->occurrenceid);
+		}
+	}
+}
+
+/*
+ * return  borrowed from a scale record
+ *
+ * @param $scale data submitted
+ * @param $occurrence_id as referentiel_referentiel id
+ * @return Object
+ */
+ /*
+// -----------------------
+function referentiel_scale_2_bareme($scale){
+    if (!empty($scale)){
+        $bareme= new Object();
+        $bareme->scaleid=$scale->id;
+        $bareme->name=$scale->name;
+        $bareme->scale=$scale->scale;
+        $bareme->maxscale=0;
+        $bareme->threshold=$bareme->maxscale;
+        if ($ts=explode(',',$scale->scale)){
+			$bareme->maxscale=count($ts)-1;
+            if ($bareme->maxscale>2){
+                $bareme->threshold= (int) (ceil($bareme->maxscale/2)) ;
+            }
+            else{
+                $bareme->threshold=$bareme->maxscale;
+            }
+        }
+        $bareme->description=$scale->description;
+        $bareme->descriptionformat=$scale->descriptionformat;
+        $bareme->icons='';
+        $bareme->labels=$scale->scale;
+        $bareme->timemodified=time();
+
+        return $bareme;
+    }
+    return NULL;
+}
+*/
 //------------------
 function referentiel_set_bareme($form){
 global $DB;
 	//DEBUG
-    //echo "<br />DEBUG :: ./block/referentiel/lib.php :: 368 <br />\n";
+    //echo "<br />DEBUG :: ./block/referentiel/lib.php :: 155 <br />\n";
 	//print_object($form);
 	//exit;
 
@@ -56,22 +168,17 @@ global $DB;
 					if (!empty($form->$s)){
                     	$rec_bareme->icons.=$form->$s.',';
 					}
-/*
- 					if (!empty($form->iconscale[$key])){
-						$rec_bareme->icons.=$form->iconscale[$key].',';
-					}
-*/
 				}
 				// DEBUG
 				//echo "<br /> 390\n";
 				//print_object($rec_bareme);
-				$DB->update_record('referentiel_scale', $rec_bareme);
-				if ($form->occurrenceid){
+				if ($DB->update_record('referentiel_scale', $rec_bareme) && !empty($form->occurrenceid)){
 					referentiel_set_bareme_occurrence($rec_bareme, $form->occurrenceid);
 				}
 			}
 		}
 	}
+
 }
 
 

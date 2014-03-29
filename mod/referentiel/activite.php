@@ -64,6 +64,7 @@ $sql='';
 
     $mode_select = optional_param('mode_select','', PARAM_ALPHANUMEXT);
     $select_acc = optional_param('select_acc', -1, PARAM_INT);      // accompagnement
+    $userbareme = optional_param('userbareme', 0, PARAM_INT); // si un bareme est utilise pour la saisie
 
     // Filtres
     require_once('filtres.php'); // Ne pas deplacer
@@ -438,7 +439,6 @@ $sql='';
             $deletefunction = "referentiel_delete_activity";
 
             switch ($mode) {
-
                 case "modifactivity":
                     if (isset($form->name)) {
                         if (trim($form->name) == '') {
@@ -459,11 +459,30 @@ $sql='';
                           "$form->instance", "");
                     }
                     else {
-                    //DEBUG
-					//echo "<br />activite.php :: 425 \n";
-					//print_object($form);
-					//
-					//exit;
+						if ($userbareme){   // evaluation basee sur bareme
+		    				$form2=$_POST;
+							// DEBUG
+							//echo "<br />DEBUG : activite.php :: 426 UTILISE BAREME<br />FORMULAIR INPUT<br />\n";
+							//print_object($form2);
+							if (!empty($form2['baremeid']) && !empty($form2['nbitems'])){
+								$liste_evaluations='';
+								for ($k=0; $k<$form2['nbitems']; $k++){
+									if (isset($form2['code_item_'.$activite_id.'_'.$k])){
+										if ($form2['code_item_'.$activite_id.'_'.$k]>=$form2['seuil']){
+											$form->code_item[]=$form2['code_code'][$k];
+										}
+										$liste_evaluations.=$form2['code_code'][$k].':'.$form2['code_item_'.$activite_id.'_'.$k].'/';
+									}
+								}
+							}
+							// DEBUG
+							// echo "<br />DEBUG : activite.php :: 444 <br />FORMULAIRE OUTPUT<br />\n";
+							// print_object($form2);
+							// enregistrer les evaluations
+							require_once('lib_bareme.php');
+							referentiel_enregistrer_evaluation_activite($liste_evaluations, $activite_id, $form2['baremeid']);
+						}
+
                         $return = $updatefunction($form);
                         if (!$return) {
                             print_error("Could not update activity $form->id of the referentiel", 'error', "activite.php?d=$referentiel->id");
