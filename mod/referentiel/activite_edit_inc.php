@@ -12,7 +12,7 @@ if (!empty($record) && !empty($course)){
 	// une enregistrement activite est charge
 
 	/////////////////// MODIFIER ////////////////////////////////////////////
-	if (isset($mode) && ($mode=="updateactivity")){
+	if (isset($mode) && ($mode=="modifactivity")){
 
 		if (!isset($form->approved)) {
     		$form->approved=0;
@@ -313,7 +313,7 @@ echo '<input type="radio" name="mailnow" value="1" />'.get_string('yes').' &nbsp
 <input type="hidden" name="sesskey"     value="<?php  p(sesskey()) ?>" />
 <input type="hidden" name="modulename"    value="<?php  p($form->modulename) ?>" />
 <input type="hidden" name="instance"      value="<?php  p($form->instance) ?>" />
-<input type="hidden" name="mode"          value="<?php  p($mode) ?>" />
+<input type="hidden" name="mode"      value="<?php p($mode) ?>" />
 <input type="submit" value="<?php  print_string("savechanges") ?>" />
 <input type="submit" name="delete" value="<?php  print_string("delete") ?>" />
 <input type="submit" name="cancel" value="<?php  print_string("quit","referentiel") ?>" />
@@ -421,7 +421,7 @@ echo '<input type="radio" name="mailnow" value="1" />'.get_string('yes').' &nbsp
 <input type="hidden" name="sesskey"     value="'.sesskey().'" />
 <input type="hidden" name="modulename"    value="'.$form->modulename.'" />
 <input type="hidden" name="instance"      value="'.$form->instance.'" />
-<input type="hidden" name="mode"          value="'.$mode.'" />
+<input type="hidden" name="mode"          value="listactivityall" />
 <input type="submit" value="'.get_string("savedoc", "referentiel").'" />
 <input type="submit" name="delete" value="'.get_string("delete").'" />
 <!-- input type="submit" name="cancel" value='.get_string("quit","referentiel").' / -->

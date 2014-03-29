@@ -46,6 +46,9 @@ require_once ("class/referentiel.class.php");
 
 // les constantes suivantes permettent de tuner le fonctionnement du module
 // a ne modifier qu'avec précaution
+define('MAXPAGE', 10);// Nombre maximal de pages pour la pagination des affichages
+define('MAXPARPAGE', 20);// Nombre d'items par page pour la pagination des affichages
+
 // La bibliothèque Overlib n'est plus intégrée par défaut depuis Moodle 2.3
 // or je l'utilise pour afficher les compétences en survol...
 $OverlibJs='/mod/referentiel/overlib/overlib.js';

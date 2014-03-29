@@ -80,29 +80,17 @@ function set_filtres_sql($type=''){
 
 	if ($type=='certificat'){
 		if (isset($data_f->f_valide) && ($data_f->f_valide=='1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND (valide=1) ';
-			else
-				$sql_f_where.=' AND (valide=1) ';
+			$sql_f_where.=' AND (valide=1) ';
 		}
 		else if (isset($data_f->f_valide) && ($data_f->f_valide=='-1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND (valide=0) ';
-			else
-				$sql_f_where.=' AND (valide=0) ';
+			$sql_f_where.=' AND (valide=0) ';
 		}
 
 		if (isset($data_f->f_verrou) && ($data_f->f_verrou=='1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND (verrou=1) ';
-			else
-				$sql_f_where.=' AND (verrou=1) ';
+			$sql_f_where.=' AND (verrou=1) ';
 		}
 		else if (isset($data_f->f_verrou) && ($data_f->f_verrou=='-1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND (verrou=0) ';
-			else
-				$sql_f_where.=' AND (verrou=0) ';
+			$sql_f_where.=' AND (verrou=0) ';
 		}
 
 		if (isset($data_f->f_date_decision) && ($data_f->f_date_decision=='1')){
@@ -134,29 +122,17 @@ function set_filtres_sql($type=''){
 	}
 	else{
 		if (isset($data_f->f_validation) && ($data_f->f_validation=='1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND (approved=1) ';
-			else
-				$sql_f_where.=' AND (approved=1) ';
+			$sql_f_where.=' AND (approved=1) ';
 		}
 		else if (isset($data_f->f_validation) && ($data_f->f_validation=='-1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND (approved=0) ';
-			else
-				$sql_f_where.=' AND (approved=0) ';
+			$sql_f_where.=' AND (approved=0) ';
 		}
 
 		if (isset($data_f->f_referent) && ($data_f->f_referent=='1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND ((date_modif<date_modif_student)  AND (approved=0)) ';
-			else
-				$sql_f_where.=' AND ((date_modif<date_modif_student) AND (approved=0))  ';
+			$sql_f_where.=' AND ((date_modif_student>date_modif) AND (approved=0))  ';
 		}
 		else if (isset($data_f->f_referent) && ($data_f->f_referent=='-1')){
-			if ($sql_f_where!='')
-				$sql_f_where.=' AND (date_modif>=date_modif_student) ';
-			else
-				$sql_f_where.=' AND (date_modif>=date_modif_student)  ';
+			$sql_f_where.=' AND (date_modif>=date_modif_student)  ';
 		}
 
 		if (isset($data_f->f_date_modif) && ($data_f->f_date_modif=='1')){

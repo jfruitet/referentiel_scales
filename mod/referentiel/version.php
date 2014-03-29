@@ -14,8 +14,8 @@ defined('MOODLE_INTERNAL') || die();
 $module=new StdClass();
 // $module->requires = 2012112900;  // Requires this Moodle version  2.5
 $module->requires = 2012120300;  // Requires this Moodle version  2.4
-$module->version  = 2014022802;  // The current module version (Date: YYYYMMDDXX)
-$module->release  = 'Referentiel v 10.00 for Moodle 2.4 et 2.5 with scale support and block - Release 2014-03-24';    // User-friendly date of release
+$module->version  = 2014022803;  // The current module version (Date: YYYYMMDDXX)
+$module->release  = 'Referentiel v 10.00 for Moodle 2.4 et 2.5 with scale support and block - Release 2014-03-29';    // User-friendly date of release
 $module->cron     = 60; //  Period for cron to check this module (secs)
 $module->component  = 'mod_referentiel'; // Full name of the plugin (used for diagnostics)
 $module->maturity  = MATURITY_STABLE;

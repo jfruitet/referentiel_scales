@@ -1,6 +1,9 @@
 <?php
 // referentiel module
 //
+
+$string['click_to_load'] = 'Click here to load the page';
+
 $string['block_ref'] = 'If you have to create a new Occurrence use the Block Skills repository...';
 $string['assignementdoc'] = 'Assignment document';
 $string['commentby'] = 'Comment by ';

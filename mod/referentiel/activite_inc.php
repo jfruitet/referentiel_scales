@@ -141,7 +141,7 @@ echo '<br />'."\n";
 <input type="hidden" name="sesskey"     value="<?php  p(sesskey()) ?>" />
 <input type="hidden" name="modulename"    value="<?php  p($form->modulename) ?>" />
 <input type="hidden" name="instance"      value="<?php  p($form->instance) ?>" />
-<input type="hidden" name="mode"          value="<?php  p($mode) ?>" />
+<input type="hidden" name="mode"      value="<?php p($mode) ?>" />
 <input type="submit" value="<?php  print_string("savechanges") ?>" />
 <input type="submit" name="cancel" value="<?php  print_string("quit","referentiel") ?>" />
 

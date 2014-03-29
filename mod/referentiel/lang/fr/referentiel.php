@@ -2,6 +2,9 @@
 // ----------------
 // UTF-8 French
 //
+
+$string['click_to_load'] = 'Cliquer ici pour charger la page';
+
 $string['block_ref'] = 'Pour créer une nouvelle occurrence passez par le Block Référentiel...';
 $string['assignementdoc'] = 'Document du devoir';
 $string['commentby'] = 'Commentaire par ';
