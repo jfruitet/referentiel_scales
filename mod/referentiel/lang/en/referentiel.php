@@ -2,6 +2,8 @@
 // referentiel module
 //
 
+$string['eval_bareme'] = 'Evaluation  with scales';
+$string['eval_sans_bareme'] = 'Evaluation without scales';
 $string['click_to_load'] = 'Click here to load the page';
 
 $string['block_ref'] = 'If you have to create a new Occurrence use the Block Skills repository...';

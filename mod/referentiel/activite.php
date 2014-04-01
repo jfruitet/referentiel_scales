@@ -371,22 +371,15 @@ $sql='';
                 //
                 foreach ($form['tactivite_id'] as $id_activite){
                     //echo "<br />ID :: ".$id_activite."\n";
-                    //
+					// DEBUG
+					//echo "<br />DEBUG : activite.php :: 375 UTILISE BAREME<br />FORMULAIRE INPUT<br />\n";
+					//print_object($form);
+
                     $form2= new Object();
                     $form2->action='modifier_activite';
                     $form2->activite_id=$form['activite_id_'.$id_activite];
         		    $form2->type_activite=$form['type_activite_'.$id_activite];
 		            $form2->old_liste_competences=$form['old_liste_competences_'.$id_activite];
-
-                    if (isset($form['code_item_'.$id_activite]) && is_array($form['code_item_'.$id_activite]) ){
-                        $form2->competences_activite=reference_conversion_code_2_liste_competence('/', $form['code_item_'.$id_activite]);
-                    }
-                    else if (isset($form['competences_activite_'.$id_activite])){
-                        $form2->competences_activite=$form['competences_activite_'.$id_activite];
-                    }
-                    else{
-                        $form2->competences_activite='';
-                    }
 
                     $form2->description_activite=stripslashes($form['description_activite_'.$id_activite]);
                     $form2->commentaire_activite=stripslashes($form['commentaire_activite_'.$id_activite]);
@@ -407,8 +400,35 @@ $sql='';
                     $form2->teacherid=$form['teacherid_'.$id_activite];
                     $form2->mailnow=$form['mailnow_'.$id_activite];
 
-                    // print_object($form2);
-                    // echo "<br />\n";
+					if ($userbareme){   // evaluation basee sur bareme
+
+							if (!empty($form['baremeid']) && !empty($form['nbitems'])){
+								$liste_evaluations='';
+								for ($k=0; $k<$form['nbitems']; $k++){
+									if (isset($form['code_item_'.$id_activite.'_'.$k])){
+										if ($form['code_item_'.$id_activite.'_'.$k]>=$form['seuil']){
+                                            $form['code_item_'.$id_activite][] = $form['code_code'][$k];  // astuce pour propager les competences validees
+										}
+										$liste_evaluations.=$form['code_code'][$k].':'.$form['code_item_'.$id_activite.'_'.$k].'/';
+									}
+								}
+							}
+							require_once('lib_bareme.php');
+							referentiel_enregistrer_evaluation_activite($liste_evaluations, $id_activite, $form['baremeid']);
+					}
+                   	if (isset($form['code_item_'.$id_activite]) && is_array($form['code_item_'.$id_activite]) ){
+     					$form2->competences_activite=reference_conversion_code_2_liste_competence('/', $form['code_item_'.$id_activite]);
+        	        }
+                    else if (isset($form['competences_activite_'.$id_activite])){
+                    	$form2->competences_activite=$form['competences_activite_'.$id_activite];
+                    }
+                    else{
+                    	$form2->competences_activite='';
+                    }
+                    //echo "<br />DEBUG : activite.php :: 431 FORMULAIRE OUTPUT<br />\n";
+                    //print_object($form2);
+                    //echo "<br />\n";
+					//exit;
                     $return = referentiel_update_activity($form2);
                     if (!$return) {
                         print_error("Could not update activity $form->activite_id of the referentiel", "activite.php?d=$referentiel->id");
@@ -460,27 +480,27 @@ $sql='';
                     }
                     else {
 						if ($userbareme){   // evaluation basee sur bareme
-		    				$form2=$_POST;
+		    				$form3=$_POST;
 							// DEBUG
 							//echo "<br />DEBUG : activite.php :: 426 UTILISE BAREME<br />FORMULAIR INPUT<br />\n";
-							//print_object($form2);
-							if (!empty($form2['baremeid']) && !empty($form2['nbitems'])){
+							//print_object($form3);
+							if (!empty($form3['baremeid']) && !empty($form3['nbitems'])){
 								$liste_evaluations='';
-								for ($k=0; $k<$form2['nbitems']; $k++){
-									if (isset($form2['code_item_'.$activite_id.'_'.$k])){
-										if ($form2['code_item_'.$activite_id.'_'.$k]>=$form2['seuil']){
-											$form->code_item[]=$form2['code_code'][$k];
+								for ($k=0; $k<$form3['nbitems']; $k++){
+									if (isset($form3['code_item_'.$activite_id.'_'.$k])){
+										if ($form3['code_item_'.$activite_id.'_'.$k]>=$form3['seuil']){
+											$form->code_item[]=$form3['code_code'][$k];
 										}
-										$liste_evaluations.=$form2['code_code'][$k].':'.$form2['code_item_'.$activite_id.'_'.$k].'/';
+										$liste_evaluations.=$form3['code_code'][$k].':'.$form3['code_item_'.$activite_id.'_'.$k].'/';
 									}
 								}
 							}
 							// DEBUG
 							// echo "<br />DEBUG : activite.php :: 444 <br />FORMULAIRE OUTPUT<br />\n";
-							// print_object($form2);
+							// print_object($form3);
 							// enregistrer les evaluations
 							require_once('lib_bareme.php');
-							referentiel_enregistrer_evaluation_activite($liste_evaluations, $activite_id, $form2['baremeid']);
+							referentiel_enregistrer_evaluation_activite($liste_evaluations, $activite_id, $form3['baremeid']);
 						}
 
                         $return = $updatefunction($form);
@@ -790,7 +810,9 @@ $sql='';
     $PAGE->requires->js('/mod/referentiel/functions.js');
      // Pagination
     $PAGE->requires->js('/mod/referentiel/ajax.js', true);
-    //$PAGE->requires->js('/mod/referentiel/test2.js', true);
+    if ($CFG->referentiel_use_scale){
+    	$PAGE->requires->js('/mod/referentiel/bareme.js', true);
+	}
 	$PAGE->navbar->add($stractivite);
     $PAGE->set_title($pagetitle);
     $PAGE->set_heading($course->fullname);
@@ -805,7 +827,7 @@ $sql='';
     }
 
 	/// Print the tabs
-	if (!empty($mode) && (($mode=="deleteactivity")
+	if (!empty($mode) && (($mode=="deleteactivity") || ($mode=="modifactivity")
 		|| ($mode=="desapproveactivity") || ($mode=="approveactivity") || ($mode=="commentactivity") )){
 		$currenttab ='updateactivity';
 	}

@@ -553,7 +553,23 @@
 	}
 	else if ($mode=='approvetask'){
 		if (isset($taskid) && ($taskid>0)){
-			referentiel_print_activities_task($taskid, $referentiel,'approvetask', $userid_filtre, $gusers);
+			//Bareme
+			$bareme=NULL;
+			if ($CFG->referentiel_use_scale){
+				require_once('lib_bareme.php');
+				//echo "<br />OCCURRENCE<br />\n";
+				//print_object($referentiel_referentiel);
+				//echo "<br />\n";
+                if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($referentiel_referentiel->id)){
+					// DEBUG
+					//echo "<br />A BAREME OCCURRENCE<br />\n";
+					//print_object($rec_assoc);
+					//echo "<br />\n";
+                    $bareme=referentiel_get_bareme($rec_assoc->refscaleid);
+				}
+			}
+
+			referentiel_print_activities_task($bareme, $taskid, $referentiel,'approvetask', $userid_filtre, $gusers);
 		}
 		else{
 			referentiel_print_liste_tasks($mode, $referentiel );
@@ -561,7 +577,23 @@
 	}
 	else if ($mode=='deletetaskactivites'){
 		if (isset($taskid) && ($taskid>0)){
-			referentiel_print_activities_task($taskid, $referentiel,'deletetaskactivites', $userid_filtre, $gusers);
+			//Bareme
+			$bareme=NULL;
+			if ($CFG->referentiel_use_scale){
+				require_once('lib_bareme.php');
+				//echo "<br />OCCURRENCE<br />\n";
+				//print_object($referentiel_referentiel);
+				//echo "<br />\n";
+                if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($referentiel_referentiel->id)){
+					// DEBUG
+					//echo "<br />A BAREME OCCURRENCE<br />\n";
+					//print_object($rec_assoc);
+					//echo "<br />\n";
+                    $bareme=referentiel_get_bareme($rec_assoc->refscaleid);
+				}
+			}
+
+			referentiel_print_activities_task($bareme, $taskid, $referentiel,'deletetaskactivites', $userid_filtre, $gusers);
 		}
 		else{
 			referentiel_print_liste_tasks($mode, $referentiel );

@@ -884,7 +884,7 @@ if (!empty($referentiel_instance)){
  *       @param object $referentiel_instance                               *                                             *
  * output null                                                             *
  ***************************************************************************/
-function referentiel_print_activities_task($taskid, $referentiel_instance, $mode, $userid_filtre=0, $gusers=NULL) {
+function referentiel_print_activities_task($bareme, $taskid, $referentiel_instance, $mode, $userid_filtre=0, $gusers=NULL) {
 // Propose la validation globale
 global $CFG;
 global $OUTPUT;
@@ -1018,7 +1018,7 @@ if (!empty($referentiel_instance)){
                         }
                         // Afficher l'activite
                         echo '</td><td width="95%">'."\n";
-                        referentiel_print_activite_detail($record, $context);
+                        referentiel_print_activite_detail($bareme, $record, $context, true);
                         echo '</td></tr>'."\n";
                     }
                 }

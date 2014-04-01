@@ -2660,7 +2660,6 @@ function referentiel_make_mail_post($type, $context, $course, $post, $userfrom, 
 // Context link to post if required
     if ($link) {
         $output .= '<div class="link">';
-        // $output .= '<a target="_blank" href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?d='.$post->ref_instance.'&activite_id='.$post->id.'&amp;userid='.$post->userid.'&amp;mode=listactivitysingle">'.
         $output .= '<a target="_blank" href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?d='.$post->ref_instance.'&activite_id='.$post->id.'">'.
                      get_string('postincontext', 'referentiel').'</a>';
         $output .= '</div>';

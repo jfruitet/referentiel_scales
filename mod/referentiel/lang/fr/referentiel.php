@@ -2,7 +2,8 @@
 // ----------------
 // UTF-8 French
 //
-
+$string['eval_bareme'] = 'Evaluer avec barème';
+$string['eval_sans_bareme'] = 'Evaluer sans barème';
 $string['click_to_load'] = 'Cliquer ici pour charger la page';
 
 $string['block_ref'] = 'Pour créer une nouvelle occurrence passez par le Block Référentiel...';

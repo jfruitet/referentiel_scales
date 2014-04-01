@@ -198,11 +198,7 @@ function display(){
         	// ACTIVITE
             if (isset($this->currenttab) && (($this->currenttab == 'list')
         		|| ($this->currenttab == 'listactivity')
-		        || ($this->currenttab == 'listactivitysingle')
         		|| ($this->currenttab == 'listactivityall')
-        || ($this->currenttab == 'listactivity')
-        || ($this->currenttab == 'listactivityall')
-        || ($this->currenttab == 'updateactivity')
 		        || ($this->currenttab == 'addactivity')
         		|| ($this->currenttab == 'updateactivity')
         		|| ($this->currenttab == 'exportactivity')

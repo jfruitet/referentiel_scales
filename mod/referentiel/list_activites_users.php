@@ -114,6 +114,22 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 		// affichage
 		// preparer les variables globales pour Overlib
 		referentiel_initialise_descriptions_items_referentiel($referentiel_referentiel->id);
+        //Bareme
+		$bareme=NULL;
+		if ($CFG->referentiel_use_scale){
+			require_once('lib_bareme.php');
+			//echo "<br />OCCURRENCE<br />\n";
+			//print_object($referentiel_referentiel);
+			//echo "<br />\n";
+            if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($referentiel_referentiel->id)){
+				// DEBUG
+				//echo "<br />A BAREME OCCURRENCE<br />\n";
+				//print_object($rec_assoc);
+				//echo "<br />\n";
+                $bareme=referentiel_get_bareme($rec_assoc->refscaleid);
+			}
+		}
+
         $userid_old=0;  // pour la jauge
         if ($modeaff==0){
 			// formulaire global
@@ -142,7 +158,7 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
                     echo get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id)."\n";
 					echo '</td></tr>'."\n";
 				}
-    			echo referentiel_edit_activite_detail($context, $cm->id, $course->id, $mode, $record_a, true);
+    			echo referentiel_edit_activite_detail($bareme, $context, $cm->id, $course->id, $mode, $record_a, true);
         	}
     		echo '<tr valign="top">
 <td class="ardoise" colspan="8">
@@ -165,13 +181,14 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 </form>'."\n";
 		}
         else{
+			// affichage
 			foreach($recs as $record_a){
                 // Jauge d'activite
 				if ($userid_old!=$record_a->userid){
                     $userid_old=$record_a->userid;
 					echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id).'</div>'."\n";
 				}
-                referentiel_print_activite_detail($record_a, $context, ($modeaff==1));
+                referentiel_print_activite_detail($bareme, $record_a, $context, ($modeaff==1));
                 if ($record_a->ref_course==$course->id){
                 	referentiel_menu_activite($cm, $context, $record_a->id, $referentiel->id, $record_a->approved, $selacc, ($modeaff==1), $mode);
                 }

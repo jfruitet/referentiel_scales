@@ -34,6 +34,19 @@
 require_once("locallib.php");
 require_once("overlib_item.php");
 
+//---------------------------------
+function encode2Javascript($str) {
+	$str=str_replace("\n", "",$str);     // une seule ligne à transmettre pour javascript
+	$str=str_replace("\r", "",$str);     // supprimer les cr
+	$str=str_replace("\t", "",$str);     // supprimer les tabulations
+	// chasser les codes reutilises pour chasser " et '
+	$str=str_replace('!', ' ',$str);
+	$str=str_replace('"', '!',$str);
+    // c'est pitié de ne pas pouvoir chasser simplement les " et ' à transmettre pour javascript
+	$str=str_replace("#", ' ',$str);
+	$str=str_replace("'", '#',$str);
+    return $str;
+}
 
 
 /**************************************************************************
@@ -671,7 +684,7 @@ function referentiel_print_enqueue_activite(){
  *  numero integer
  *  output null                                                     *
 **/
-function referentiel_print_activite_detail($record_a, $context, $detail=true, $numero=0){
+function referentiel_print_activite_detail($bareme, $record_a, $context, $detail=true, $numero=0){
 global $CFG;
     $s='';
     $s0='';
@@ -798,10 +811,13 @@ global $CFG;
 			$s1.='<br /><span class="light">'.get_string('liste_codes_competence','referentiel').'</span> <span class="bold">'."\n";
 			$s1.=referentiel_affiche_liste_codes_competence('/',$competences_activite, $ref_referentiel)."\n";
         	$s1.='</span>'."\n";
+/*
 			if ($CFG->referentiel_use_scale){
 				require_once('lib_bareme.php');
 				if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($ref_referentiel)){
 					if ($bareme=referentiel_get_bareme($rec_assoc->refscaleid)){
+*/
+if (!empty($bareme)){
 						$competences_bareme=referentiel_get_competences_activite($activite_id, $bareme->id);
 						if (empty($competences_bareme)){ // creer le bareme
 							$competences_bareme=referentiel_creer_competences_activite($record_a, $bareme);
@@ -815,8 +831,11 @@ global $CFG;
 							}
 						}
 					}
+/*
 				}
 			}
+*/
+
        		$s1.='</span>'."\n";
 
 			//$s1.=$stask;
@@ -1039,7 +1058,7 @@ global $t_item_description_competence;
 
 
 // ----------------------------------------------------
-function referentiel_edit_activite_detail($context, $cmid, $courseid, $mode, $record, $actif=true){
+function referentiel_edit_activite_detail($bareme, $context, $cmid, $courseid, $mode, $record, $actif=true){
 //($data_filtre,$mode, $cm, $course, $referentiel_instance, $record, $context, $actif=true){
 //	Saisie et validation globale
 // le formulaire est global
@@ -1303,18 +1322,52 @@ print_object($CFG);
 		else{
 			$s.='<td colspan="4" class="invalide">';
 		}
-
 		if ($ref_course == $courseid){
+            $str_choix_competences='';
+			// liste des compétences
 			if (($ref_task!=0) && ($USER->id==$userid)) { // activite issue d'une tâche
-				$s.=referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id, 'onchange="return validerCheckBox(\'tactivite_id_'.$activite_id.'\')" ');
-	       		$s.='<input type="hidden" name="competences_activite" value="'.$competences_activite.'" />'."\n";
-    		}
+				$str_choix_competences.=referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id, 'onchange="return validerCheckBox(\'tactivite_id_'.$activite_id.'\')" ');
+    	   		$str_choix_competences.='<input type="hidden" name="competences_activite" value="'.$competences_activite.'" />'."\n";
+   			}
 			else{ // activite modifiable entierement
-				$s.=referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_activite, $activite_id, 'onchange="return validerCheckBox(\'tactivite_id_'.$activite_id.'\')" ' );
+				$str_choix_competences.=referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_activite, $activite_id, 'onchange="return validerCheckBox(\'tactivite_id_'.$activite_id.'\')" ' );
 			}
+
+		 	if ($bareme){
+                $divbareme='bareme_'.$activite_id;
+				$s.='<div id="'.$divbareme.'">'."\n";
+                $s.=$str_choix_competences;
+                $s.='</div>'."\n";
+
+				// Evaluation des items avec le bareme
+				$str_a_evaluer='';
+				$s_bareme='';
+				$competences_bareme=referentiel_get_competences_activite($activite_id, $bareme->id);
+				$str_a_evaluer=referentiel_affiche_liste_codes_competence('/',$competences_activite, $ref_referentiel)."\n";
+				if (!empty($str_a_evaluer)){
+                	$s_bareme.='<br /><span class="bold">'.get_string('liste_competence_cochees','referentiel').'</span> '."\n"." ".$str_a_evaluer;
+				}
+				$s_bareme.='<br />'."\n";
+				// modification
+				$s_bareme.=referentiel_modifier_evaluation_codes_item($bareme, $ref_referentiel, $competences_activite, $competences_bareme, false, $activite_id, '', true);
+                $s_bareme=encode2Javascript($s_bareme);
+ 				$s_bouton='<input type="button" value="'.get_string('eval_bareme','referentiel').'" onclick="javascript:activerBareme(\''.$s_bareme.'\', \''.$divbareme.'\'); validerCheckBox(\'tactivite_id_'.$activite_id.'\')">'."\n";
+
+				$str_choix_competences=encode2Javascript($str_choix_competences);
+                $s_bouton2='<input type="button" value="'.get_string('eval_sans_bareme','referentiel').'" onclick="javascript:activerBareme(\''.$str_choix_competences.'\', \''.$divbareme.'\'); validerCheckBox(\'tactivite_id_'.$activite_id.'\')">'."\n";
+
+                $divbutton='button_'.$activite_id;
+				$s.='<div id="'.$divbutton.'">'."\n";
+				$s.=$s_bouton;
+                $s.=$s_bouton2;
+                $s.= '</div>'."\n";
+ 	  		}
+			else{
+				$s.=$str_choix_competences;
+			}
+
 		}
 		else{
-			// INUTILE referentiel_initialise_descriptions_items_referentiel($ref_referentiel);
 			$s.=referentiel_affiche_liste_codes_competence('/',$competences_activite, $ref_referentiel);
 		}
 

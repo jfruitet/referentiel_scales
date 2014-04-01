@@ -954,6 +954,7 @@ function referentiel_formate_saisie_bareme($index, $codeitem, $grade, $tscales, 
  *  bareme : a referential scale 
  *  refrefid : referentiel_referentiel id
  *  liste_saisie : string : les competences qui seront spécialement évaluées
+ *  liste_evaluations :  string : les appreciatons attachees à chaque item
  *  is_task : boolean : activite de type tache, on n'affiche pas les autres items que ceux de la liste saisie
  *  id_activite : activity id , utile si l'activité est modifiée
  *  comportement : ??
@@ -1195,7 +1196,8 @@ $tlabels=array();
 function referentiel_enregistrer_evaluation_activite($liste_evaluations, $activite_id, $baremeid){
 global $DB;
 	// DEBUG
-	// echo "<br />DEBUG : lib_bareme.php :: 1184  <br />FORMULAIRE OUTPUT<br />\n $liste_evaluations<br /> $activite_id<br /> $baremeid\n";
+	//echo "<br />DEBUG : lib_bareme.php :: 1199  <br />FORMULAIRE OUTPUT<br />\n $liste_evaluations<br /> $activite_id<br /> $baremeid\n";
+	//exit;
 	if (!empty($activite_id) && !empty($baremeid)){
 
 	    if ($rec= $DB->get_record('referentiel_activite_scale', array('activiteid'=>$activite_id, 'refscaleid'=> $baremeid))){
