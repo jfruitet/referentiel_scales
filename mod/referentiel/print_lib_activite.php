@@ -1641,6 +1641,7 @@ function referentiel_affiche_competences_declarees($separateur1, $separateur2, $
 
 
 // Menu
+// http://localhost/moodle253/mod/referentiel/activite.php?id=3&select_acc=0&activite_id=8&mode=listactivityall&old_mode=listactivity&sesskey=sM59SHB5eW#activite
 // ----------------------------------------------------------
 function referentiel_menu_activite($cm, $context, $activite_id, $referentiel_instance_id, $approved, $select_acc=0, $detail=true, $mode='updateactivity'){
 	global $CFG;
@@ -2210,7 +2211,7 @@ global $COURSE;
 */
 
 // ----------------------------------------------------
-function referentiel_activite_id($context, $mode, $cm, $instance, $activite_id, $select_acc=0, $detail=true){
+function referentiel_activite_id($context, $mode, $cm, $instance, $activite_id, $bareme, $select_acc=0, $detail=true){
 global $COURSE;
 
 
@@ -2219,7 +2220,7 @@ global $COURSE;
     	$record_a=referentiel_get_activite($activite_id);
        	if (!empty($record_a)){
 			echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $instance->ref_referentiel).'</div>'."\n";
-           	referentiel_print_activite_detail($record_a, $context, true, 0);
+			referentiel_print_activite_detail($bareme, $record_a, $context, true, 0);
            	if (!$record_a->approved){
                	echo '<div align="center">'.referentiel_ajout_document($record_a, $mode, $select_acc)."</div>\n";
 			}
@@ -2264,5 +2265,6 @@ function referentiel_ajout_document($record, $mode, $select_acc=0){
     }
     return $s;
 }
+
 
 ?>

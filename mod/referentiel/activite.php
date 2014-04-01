@@ -885,7 +885,14 @@ $sql='';
 		referentiel_boites_selections($context, $mode, $cm, $course, $referentiel, $initiale, $userids, $userid_filtre, $gusers, $data_f, $select_acc);
 
 		if (!empty($activite_id)){ // affichage de l'activite
-    		referentiel_activite_id($context, $mode, $cm, $referentiel, $activite_id, $select_acc, ($mode=='listactivityall'));
+            $bareme=NULL;
+			if ($CFG->referentiel_use_scale){
+				require_once('lib_bareme.php');
+				if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($referentiel_referentiel->id)){
+ 					$bareme=referentiel_get_bareme($rec_assoc->refscaleid);
+				}
+			}
+    		referentiel_activite_id($context, $mode, $cm, $referentiel, $activite_id, $bareme, $select_acc, ($mode=='listactivityall'));
 		}
 		else{
 			// Affichage des boites de selection et espace pour insertion Ajax
