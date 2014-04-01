@@ -35,6 +35,15 @@
         return str;
     }
 
+    function urldecode(str) {
+		if (typeof str != "string") {
+			return str;
+		}
+		return decodeURIComponent(str.replace(/\+/g, ' '));
+	}
+
+
+
     // dessine la barre de selection des pages
 	function redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff)
 	{
@@ -67,7 +76,7 @@
     // Ajax call  ajax.js
     function createXHR()
     {
-        var request = false;
+		var request = false;
         try {
             request = new ActiveXObject('Msxml2.XMLHTTP');
         }
@@ -91,9 +100,10 @@
 	function ajaxPaging(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff)
 	{
 	// alert(sql);
+        var url= urldecode(pagename);
         var xhr=createXHR();
-        //xhr.open("GET",pagename+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+limit+'&selacc='+selacc+'&modeaff='+modeaff, true);
-        xhr.open("GET",pagename+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff, true);
+        //xhr.open("GET",pagename+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff, true);
+        xhr.open("GET",url+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff, true);
 
 		document.getElementById(div).innerHTML="Started...";
         //document.getElementById(div).innerHTML='<img src="ajax-loader.gif" id="loader">';

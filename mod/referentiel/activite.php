@@ -35,7 +35,7 @@ $pageNo = optional_param('pageNo', 1, PARAM_INT);    // Page en cours
 $extraParam='';
 $totalRecords=0;
 
-$pageName="list_activites_users.php";
+$pageName="$CFG->wwwroot/mod/referentiel/list_activites_users.php";
 $divid='lifeCycle';  // zone affichage du retour des requêtes
 $perPage=1;
 $totalPage=1;
@@ -177,6 +177,9 @@ $sql='';
 	if (isset($userid) && ($userid>0)){
 		$userid_filtre=$userid;
 	}
+	// DEBUG
+	//echo "<br>DEBUG :: activite.php :: 181 :$userid_filtre\n";
+	//exit;
 
   // accompagnement
 	if ($select_acc==-1){
@@ -211,6 +214,7 @@ $sql='';
 		  unset($action);
     }
 
+/*
     if (isset($action) && ($action=='selectaccompagnement')
       && ($mode=='accompagnement') && confirm_sesskey() )
     {
@@ -245,6 +249,7 @@ $sql='';
         unset($form);
         unset($action);
     }
+*/
 
 
 	/// Delete any requested records
@@ -630,8 +635,7 @@ $sql='';
         }
     }
 	/// selection filtre
-    if (empty($userid_filtre) || ($userid_filtre==$USER->id)
-        || (isset($mode_select) && ($mode_select=='selectetab'))){
+    if (empty($userid_filtre) || ($userid_filtre==$USER->id) || (isset($mode_select) && ($mode_select=='selectetab'))){
         set_filtres_sql();
     }
 
@@ -769,7 +773,7 @@ $sql='';
 			    //$sql = str_replace('<','&lt;',$sql);    // hack
 			    //$onload= " onload=\"javascript:ajaxPaging(pagename='".$pageName."',pageNo='1',instanceid='".$referentiel->id."',sql='".$sql."',div='".$divid."',totalPage='".$totalPage."',perPage='".$perPage."',selacc='".$select_acc."',modeaff='".$modeaff."') \"";
 
-				$ajaxvalue = "'".$pageName."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."'";
+				$ajaxvalue = "'".urlencode($pageName)."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."'";
 				//$ajaxvalue = "'".$pageName."',1,".$referentiel->id.",'".$sql."','".$lparams."','".$divid."',".$totalPage.",".$perPage.",".$select_acc.",".$modeaff."";
 		    	//echo $ajaxvalue;
 				$onclick="javascript:ajaxPaging(".$ajaxvalue.");";
