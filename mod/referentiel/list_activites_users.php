@@ -191,9 +191,12 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
                 referentiel_print_activite_detail($bareme, $record_a, $context, ($modeaff==1));
                 if ($record_a->ref_course==$course->id){
                 	referentiel_menu_activite($cm, $context, $record_a->id, $referentiel->id, $record_a->approved, $selacc, ($modeaff==1), $mode);
+	                if (!$record_a->approved){
+    	           		echo '<div align="center">'.referentiel_ajout_document($record_a, $mode, $selacc)."</div>\n";
+					}
                 }
-                if (!$record_a->approved){
-               		echo '<div align="center">'.referentiel_ajout_document($record_a, $mode, $selacc)."</div>\n";
+				else{
+                    echo '<div align="center">'.get_string('activite_exterieure','referentiel')."</div>\n";
 				}
 				echo '<br />'."\n";
 			}

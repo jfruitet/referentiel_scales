@@ -370,6 +370,9 @@ function referentiel_get_liste_users_pagination($course, $referentiel_instance, 
 // retourne la liste des utilisateurs a afficher
 global $USER;
 $record_id_users=array();
+// DEBUG
+// echo "<br />print_lib_activite.php :: 374:: SELECT_ACC: $select_acc, USERID: ".$USER->id.", USER_FILTRE: $userid_filtre\n";
+//exit;
 	if ($not_student){ // liste des etudiants
 		// recuperer les utilisateurs filtres
         if (!empty($select_acc) && ($userid_filtre == 0)){
@@ -380,7 +383,6 @@ $record_id_users=array();
             // retourne les etudiants du cours ou userid_filtre si != 0
             $record_id_users = referentiel_get_students_course($course->id, $userid_filtre, 0);
         }
-
 		// afficher le groupe courant
 		if ($record_id_users && $gusers){ // liste des utilisateurs du groupe courant
 			$record_users  = array_intersect($gusers, array_keys($record_id_users));
@@ -403,7 +405,7 @@ $record_id_users=array();
 				$record_id_users[]=$a;
             }
         }
-		else if ((($userid_filtre==$USER->id) || ($userid_filtre==0)) && $not_student){
+		else if (empty($record_id_users) && ($userid_filtre!=0) && ($userid_filtre==$USER->id)){
 			// Ajouter l'utilisateur courant pour qu'il puisse voir ses propres activites
 			$a = new Object();
 			$a->userid=$USER->id;
@@ -412,12 +414,12 @@ $record_id_users=array();
 	}
 	else{
 		// seulement l'utilisateur courant
-		//if (($userid_filtre==$USER->id) || ($userid_filtre==0)){
+		if (($userid_filtre==$USER->id) || ($userid_filtre==0)){
 			// Ajouter l'utilisateur courant pour qu'il puisse voir ses propres activites
 			$a = new Object();
 			$a->userid=$USER->id;
 			$record_id_users[]=$a;
-		//}
+		}
 	}
     return $record_id_users;
 }

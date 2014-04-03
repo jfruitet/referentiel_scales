@@ -43,7 +43,11 @@ This is the activity module for Referentiel plugin
 Référentiel pour Moodle 2.4, 2.5 avec barèmes
 Referentiel for Moodle 2.4, 2.5  with scales support
 ---------------------------------------------
+
 Version 10.00 (2014022803) for Moodle 2.4 et 2.5 with scale support and block
+Release 2014-04-03
+Pagination de l'affichage des activités
+
 Release 2014-03-29
 Pagination de l'affichage des activités
 
