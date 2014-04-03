@@ -759,7 +759,7 @@ function referentiel_print_suivi_user($mode, $referentiel_instance, $userid_filt
 				    // echo "<br />\n";
 				    // exit;
 				    $record_users  = array_intersect($gusers, array_keys($record_id_users));
-				    // echo "<br />DEBUG :: print_lib_activite.php :: 745 :: RECORD_USERS<br />\n";
+				    // echo "<br />DEBUG :: print_lib_repartition.php :: 745 :: RECORD_USERS<br />\n";
 				    // print_r($record_users  );
 				    // echo "<br />\n";
 				    // recopier
@@ -791,7 +791,7 @@ function referentiel_print_suivi_user($mode, $referentiel_instance, $userid_filt
                 }
                 else{
                     $record_id_users = referentiel_get_students_course($course->id, $userid_filtre, 0);
-                    // echo "<br />DEBUG :: print_lib_activite.php :: 1850 :: RECORD_USERS<br />\n";
+                    // echo "<br />DEBUG :: print_lib_repartition.php :: 1850 :: RECORD_USERS<br />\n";
                     // print_r($record_users  );
                     // echo "<br />\n";
                 }
@@ -815,7 +815,7 @@ function referentiel_print_suivi_user($mode, $referentiel_instance, $userid_filt
                 $record_id_users[]=$a_obj;
             }
 
-            // echo "<br />DEBUG :: print_lib_activite.php :: 1870 :: RECORD_USERS<br />\n";
+            // echo "<br />DEBUG :: print_lib_repartition.php :: 1870 :: RECORD_USERS<br />\n";
             // print_r($record_users  );
             // echo "<br />\n";
 
@@ -946,7 +946,7 @@ $t_users=array();
 		}
 		array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
 		//
-		// echo "<br />Debug :: print_lib_activite.php :: 1419 ::<br />\n";
+		// echo "<br />Debug :: print_lib_repartition.php :: 1419 ::<br />\n";
 		// print_r($t_users);
 
 		// exit;

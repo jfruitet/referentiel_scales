@@ -489,7 +489,7 @@ $t_users=array();
 		}
 		array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
 		//
-		// echo "<br />Debug :: print_lib_activite.php :: 1419 ::<br />\n";
+		// echo "<br />Debug :: lib_certificat.php :: 1419 ::<br />\n";
 		// print_r($t_users);
 		// exit;
         $alpha  = explode(',', get_string('alphabet', 'referentiel'));

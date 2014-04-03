@@ -45,7 +45,7 @@
 
 
     // dessine la barre de selection des pages
-	function redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff)
+	function redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid)
 	{
         var i;
         var pagingstr;
@@ -57,8 +57,7 @@
 		{
             if (i != pageNo)
 			{
-                pagingstr = pagingstr + ' <a href="javascript:ajaxPaging(\''+pagename+'\',pageNo=\''+i+'\',instanceid=\''+instanceid+'\',sql=\''+sql+'\',lparams=\''+lparams+'\',div=\''+div+'\',totalPage=\''+totalPage+'\',perPage=\''+perPage+'\',selacc=\''+selacc+'\',modeaff=\''+modeaff+'\')">'+i+'</a> ';
-				//pagingstr = pagingstr + ' <a href="javascript:ajaxPaging(\''+pagename+',pageNo='+i+',instanceid='+instanceid+',sql=\''+sql+'\',lparams=\''+lparams+'\',div=\''+div+'\',totalPage='+totalPage+',perPage='+perPage+',selacc='+selacc+',modeaff='+modeaff+')">'+i+'</a> ';
+                pagingstr = pagingstr + ' <a href="javascript:ajaxPaging(\''+pagename+'\',pageNo=\''+i+'\',instanceid=\''+instanceid+'\',sql=\''+sql+'\',lparams=\''+lparams+'\',div=\''+div+'\',totalPage=\''+totalPage+'\',perPage=\''+perPage+'\',selacc=\''+selacc+'\',modeaff=\''+modeaff+'\',userid=\''+userid+'\')">'+i+'</a> ';
                 //alert(i);
 			}
 			else
@@ -97,13 +96,13 @@
     }
 
     // lance l'appel au script des requetes par Ajax
-	function ajaxPaging(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff)
+	function ajaxPaging(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid)
 	{
 	// alert(sql);
         var url= urldecode(pagename);
         var xhr=createXHR();
         //xhr.open("GET",pagename+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff, true);
-        xhr.open("GET",url+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff, true);
+        xhr.open("GET",url+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff+'&userid='+userid, true);
 
 		document.getElementById(div).innerHTML="Started...";
         //document.getElementById(div).innerHTML='<img src="ajax-loader.gif" id="loader">';
@@ -120,6 +119,6 @@
 
 		xhr.send(null);
 
-		redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff);
+		redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid);
 
 	}

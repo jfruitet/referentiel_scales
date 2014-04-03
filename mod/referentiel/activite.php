@@ -445,7 +445,12 @@ $sql='';
                 }
             }
             unset($form);
-            redirect("$CFG->wwwroot/mod/referentiel/activite.php?d=$referentiel->id&amp;pageNo=$pageNo&amp;select_acc=$select_acc&amp;mode=$mode&amp;f_auteur=$data_f->f_auteur&amp;f_validation=$data_f->f_validation&amp;f_referent=$data_f->f_referent&amp;f_date_modif=$data_f->f_date_modif&amp;f_date_modif_student=$data_f->f_date_modif_student");
+			if (!empty($userid_filtre)){
+            	redirect("$CFG->wwwroot/mod/referentiel/activite.php?d=$referentiel->id&amp;pageNo=$pageNo&amp;userid=$userid_filtre&amp;select_acc=$select_acc&amp;mode=$mode&amp;f_auteur=$data_f->f_auteur&amp;f_validation=$data_f->f_validation&amp;f_referent=$data_f->f_referent&amp;f_date_modif=$data_f->f_date_modif&amp;f_date_modif_student=$data_f->f_date_modif_student");
+			}
+			else{
+            	redirect("$CFG->wwwroot/mod/referentiel/activite.php?d=$referentiel->id&amp;pageNo=$pageNo&amp;select_acc=$select_acc&amp;mode=$mode&amp;f_auteur=$data_f->f_auteur&amp;f_validation=$data_f->f_validation&amp;f_referent=$data_f->f_referent&amp;f_date_modif=$data_f->f_date_modif&amp;f_date_modif_student=$data_f->f_date_modif_student");
+			}
             exit;
         }
 
@@ -636,6 +641,7 @@ $sql='';
     }
 	/// selection filtre
     if (empty($userid_filtre) || ($userid_filtre==$USER->id) || (isset($mode_select) && ($mode_select=='selectetab'))){
+    //if (isset($mode_select) && ($mode_select=='selectetab')){
         set_filtres_sql();
     }
 
@@ -772,8 +778,7 @@ $sql='';
 			    //$sql = str_replace('>','&gt;',$sql);    // hack
 			    //$sql = str_replace('<','&lt;',$sql);    // hack
 			    //$onload= " onload=\"javascript:ajaxPaging(pagename='".$pageName."',pageNo='1',instanceid='".$referentiel->id."',sql='".$sql."',div='".$divid."',totalPage='".$totalPage."',perPage='".$perPage."',selacc='".$select_acc."',modeaff='".$modeaff."') \"";
-
-				$ajaxvalue = "'".urlencode($pageName)."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."'";
+				$ajaxvalue = "'".urlencode($pageName)."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."','".$userid_filtre."'";
 				//$ajaxvalue = "'".$pageName."',1,".$referentiel->id.",'".$sql."','".$lparams."','".$divid."',".$totalPage.",".$perPage.",".$select_acc.",".$modeaff."";
 		    	//echo $ajaxvalue;
 				$onclick="javascript:ajaxPaging(".$ajaxvalue.");";

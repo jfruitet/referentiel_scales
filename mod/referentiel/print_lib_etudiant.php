@@ -355,7 +355,7 @@ function referentiel_select_liste_etudiants($initiale, $userids, $mode, $referen
 
             // DEBUG
             /*
-            echo "<br />DEBUG :: print_lib_activite.php :: 2386<br />USERIDS : $userids<br />\n";
+            echo "<br />DEBUG :: print_lib_etudiant.php :: 2386<br />USERIDS : $userids<br />\n";
             print_r($t_users_select);
             echo "<br />\n";
             print_r($record_id_users);
@@ -466,7 +466,7 @@ $appli="etudiant.php";
 		}
 		array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
 		//
-		// echo "<br />Debug :: print_lib_activite.php :: 1419 ::<br />\n";
+		// echo "<br />Debug :: print_lib_etudiant.php :: 1419 ::<br />\n";
 		// print_r($t_users);
 		// exit;
         $alpha  = explode(',', get_string('alphabet', 'referentiel'));

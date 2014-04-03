@@ -163,8 +163,8 @@ onchange="self.location=document.getElementById(\'selectetab_f_auteur\').f_auteu
     $s.='</form>'."\n";
 	$s.='</th>';
 
-	$s.='<th width="5%">'.get_string('course').'</th>';
-	$s.='<th width="'.$width.'">'.get_string('type','referentiel').'</th>';
+	//$s.='<th width="5%">'.get_string('course').'</th>';
+	//$s.='<th width="'.$width.'">'.get_string('type','referentiel').'</th>';
 	if ($oklistesimple){
 		$s.='<th width="25%">'.get_string('liste_codes_competence','referentiel').'</th>';
 	}
@@ -480,15 +480,15 @@ $t_users_lastname=array();
 	    foreach ($record_users as $record_u) {   // liste d'id users
 			//
 			if (!empty($record_u->userid)){
-    			$firstname= referentiel_get_user_prenom($record_u->userid);
+				$firstname= referentiel_get_user_prenom($record_u->userid);
                 $lastname = referentiel_get_user_nom($record_u->userid);
                 $initiale = mb_strtoupper(substr($lastname,0,1),'UTF-8');
 
-			     $t_users[]= array('id' => $record_u->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'initiale' => $initiale);
-			     $t_users_id[]= $record_u->userid;
+			    $t_users[]= array('id' => $record_u->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'initiale' => $initiale);
+			    $t_users_id[]= $record_u->userid;
 
-			     $t_users_lastname[] = $lastname;
-			     $t_users_firstname[]= $firstname;
+			    $t_users_lastname[] = $lastname;
+			    $t_users_firstname[]= $firstname;
             }
 		}
 
@@ -1643,21 +1643,20 @@ function referentiel_affiche_competences_declarees($separateur1, $separateur2, $
 
 
 // Menu
-// http://localhost/moodle253/mod/referentiel/activite.php?id=3&select_acc=0&activite_id=8&mode=listactivityall&old_mode=listactivity&sesskey=sM59SHB5eW#activite
 // ----------------------------------------------------------
-function referentiel_menu_activite($cm, $context, $activite_id, $referentiel_instance_id, $approved, $select_acc=0, $detail=true, $mode='updateactivity'){
+function referentiel_menu_activite($cm, $context, $activite_id, $userid, $referentiel_instance_id, $approved, $select_acc=0, $detail=true, $mode='updateactivity'){
 	global $CFG;
 	global $OUTPUT;
 			echo '<div align="center">';
 			if ($detail){
-                echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;mode=listactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'#activite"><img src="'.$OUTPUT->pix_url('nosearch','referentiel').'" alt="'.get_string('moins', 'referentiel').'" title="'.get_string('moins', 'referentiel').'" /></a>';
+                echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;userid='.$userid.'&amp;mode=listactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'#activite"><img src="'.$OUTPUT->pix_url('nosearch','referentiel').'" alt="'.get_string('moins', 'referentiel').'" title="'.get_string('moins', 'referentiel').'" /></a>';
             }
             else{
-                echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;mode=listactivityall&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'#activite"><img src="'.$OUTPUT->pix_url('search','referentiel').'" alt="'.get_string('plus', 'referentiel').'" title="'.get_string('plus', 'referentiel').'" /></a>'."\n";
+                echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;userid='.$userid.'&amp;mode=listactivityall&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'#activite"><img src="'.$OUTPUT->pix_url('search','referentiel').'" alt="'.get_string('plus', 'referentiel').'" title="'.get_string('plus', 'referentiel').'" /></a>'."\n";
             }
 			if (has_capability('mod/referentiel:approve', $context)){
-				echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;mode=modifactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('edit','referentiel').'" alt="'.get_string('edit').'" title="'.get_string('edit').'" /></a>';
-				echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;mode=deleteactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('delete','referentiel').'" alt="'.get_string('delete').'" title="'.get_string('delete').'" /></a>';
+				echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;userid='.$userid.'&amp;mode=modifactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('edit','referentiel').'" alt="'.get_string('edit').'" title="'.get_string('edit').'" /></a>';
+				echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;userid='.$userid.'&amp;mode=deleteactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('delete','referentiel').'" alt="'.get_string('delete').'" title="'.get_string('delete').'" /></a>';
     	    }
 			else if (referentiel_activite_isowner($activite_id)) {
             	if (!$approved){
@@ -1668,15 +1667,15 @@ function referentiel_menu_activite($cm, $context, $activite_id, $referentiel_ins
 			// valider
     	    if (has_capability('mod/referentiel:approve', $context)){
 				if (!$approved){
-            		echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;mode=approveactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('nonvalide','referentiel').'" alt="'.get_string('approve', 'referentiel').'" title="'.get_string('approve', 'referentiel').'" /></a>';
+            		echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;userid='.$userid.'&amp;mode=approveactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('nonvalide','referentiel').'" alt="'.get_string('approve', 'referentiel').'" title="'.get_string('approve', 'referentiel').'" /></a>';
 				}
 	       		else{
-    	        	echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;mode=desapproveactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('valide','referentiel').'" alt="'.get_string('desapprove', 'referentiel').'" title="'.get_string('desapprove', 'referentiel').'" /></a>';
+    	        	echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;userid='.$userid.'&amp;mode=desapproveactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('valide','referentiel').'" alt="'.get_string('desapprove', 'referentiel').'" title="'.get_string('desapprove', 'referentiel').'" /></a>';
 				}
 			}
 	        // commentaires
     	    if (has_capability('mod/referentiel:comment', $context)){
-        		echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;mode=commentactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('feedback','referentiel').'" alt="'.get_string('comment', 'referentiel').'" title="'.get_string('comment', 'referentiel').'" /></a>';
+        		echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;activite_id='.$activite_id.'&amp;userid='.$userid.'&amp;mode=commentactivity&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('feedback','referentiel').'" alt="'.get_string('comment', 'referentiel').'" title="'.get_string('comment', 'referentiel').'" /></a>';
 			}
 			echo '</div>'."\n";
 
@@ -2037,187 +2036,13 @@ print_object($t_item_code);
     if ($fonction) return $s; else echo $s;
 }
 
-/*
-// ----------------------------------------------------
-function referentiel_print_activite_id($activite_id, $referentiel_instance, $mode='listactivityall', $initiale=0, $userids='', $userid_filtre=0, $gusers=NULL, $sql_f_where='', $sql_f_order='', $data_f, $select_acc=0) {
-global $DB;
-global $CFG;
-global $USER;
-static $istutor=false;
-static $isteacher=false;
-static $isadmin=false;
-static $isstudent=false;
-static $iseditor=false;
-static $isguest=false;
-static $referentiel_id = NULL;
-
-global $COURSE;
-
-    // contexte
-    $cm = get_coursemodule_from_instance('referentiel', $referentiel_instance->id);
-    $course = $DB->get_record('course', array('id' => $cm->course));
-    if (empty($cm) or empty($course)){
-        print_error('REFERENTIEL_ERROR 5 :: print_lib_task.php :: You cannot call this script in that way');
-    }
-
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-    $referentiel_id = $referentiel_instance->ref_referentiel;
-
-    $records = array();
-
-    $roles=referentiel_roles_in_instance($referentiel_instance->id);
-    $iseditor=$roles->is_editor;
-    $isadmin=$roles->is_admin;
-    $isteacher=$roles->is_teacher;
-    $istutor=$roles->is_tutor;
-    $isstudent=$roles->is_student;
-    $isguest=$roles->is_guest;
-
-    if (!empty($referentiel_id)){
-        $referentiel_referentiel=referentiel_get_referentiel_referentiel($referentiel_id);
-        if (!$referentiel_referentiel){
-            if ($iseditor){
-                print_error('creer_referentiel','referentiel', "edit.php?d=$referentiel_instance->id&amp;mode=editreferentiel&amp;sesskey=".sesskey());
-    		}
-            else {
-                print_error('creer_referentiel','referentiel', "../../course/view.php?id=$course->id&amp;sesskey=".sesskey());
-    		}
-	    }
-
-	 	// Preparer les variables globales pour Overlib ========================
-		referentiel_initialise_descriptions_items_referentiel($referentiel_referentiel->id);
-
-        // Specifique car on a l'id de l'activité
-        if ($activite_id){
-            $record_a=referentiel_get_activite($activite_id);
-            if ($record_a){
-                $userid_filtre=$record_a->userid;
-            }
-        }
-        // Boites de selection  ================================================
-		// boite pour selectionner les utilisateurs
-		if ($isteacher || $iseditor || $istutor){
-			if (!empty($select_acc)){
-			  // eleves accompagnes
-                $record_id_users  = referentiel_get_accompagnements_teacher($referentiel_instance->id, $course->id, $USER->id);
-            }
-			else{
-                // tous les users possibles (pour la boite de selection)
-				// Get your userids the normal way
-                $record_id_users  = referentiel_get_students_course($course->id,0,0);  //seulement les stagiaires
-			}
-            if ($gusers && $record_id_users){ // liste des utilisateurs du groupe courant
-				$record_users  = array_intersect($gusers, array_keys($record_id_users));
-				// recopier
-				$record_id_users=array();
-				foreach ($record_users  as $record_id){
-                    $a_obj=new stdClass();
-                    $a_obj->userid=$record_id;
-                    $record_id_users[]=$a_obj;
-				}
-			}
-			// Ajouter l'utilisateur courant pour qu'il voit ses activités
-            $a_obj=new stdClass();
-            $a_obj->userid=$USER->id;
-            $record_id_users[]=$a_obj;
-
-			echo referentiel_select_users_activite_accompagnes($userid_filtre, $select_acc, $data_f, $mode);
-            echo referentiel_select_users_activite_2($record_id_users, $userid_filtre, $select_acc, $mode, $initiale, $data_f);
-		}
-		else{
-            if (!empty($record_a) && ($USER->id == $record_a->userid)){
-                $userid_filtre=$USER->id; // les étudiants ne peuvent voir que leur fiche
-            }
-            else{
-                print_error('acces_interdit','referentiel', $CFG->wwwroot.'/mod/referentiel/view.php?id='.$cm->id.'&amp;non_redirection=1');
-            }
-		}
-
-        // Liste des utilisateurs a afficher ================================================
-        // recuperer les utilisateurs filtres
-		// $userid_filtre est l'id de l'utilisateur dont on affiche les activites
-		// si $userid_filtre ==0 on retourne tous les utilisateurs du cours et du groupe
-        if (!empty($userid_filtre)){
-            $record_id_users = referentiel_get_students_course($course->id, $userid_filtre, 0);
-        }
-		else{
-            if (!empty($select_acc)){
-                // eleves accompagnes
-                $record_id_users  = referentiel_get_accompagnements_teacher($referentiel_instance->id, $course->id, $USER->id);
-            }
-            else{
-                $record_id_users = referentiel_get_students_course($course->id, $userid_filtre, 0);
-            }
-        }
-
-		if ($record_id_users && $gusers){ // liste des utilisateurs du groupe courant
-			$record_users  = array_intersect($gusers, array_keys($record_id_users));
-			// recopier
-			$record_id_users=array();
-			foreach ($record_users  as $record_id){
-                $a_obj=new stdClass();
-                $a_obj->userid=$record_id;
-                $record_id_users[]=$a_obj;
-			}
-		}
-
-		// Utilisateurs selectionnes de façon alphabetique
-		if (!empty($userids)){
-            $t_users_select=explode('_', $userids);
-            $record_id_users=array();
-            foreach($t_users_select as $userid){
-                $a_obj=new stdClass();
-                $a_obj->userid=$userid;
-                $record_id_users[]=$a_obj;
-            }
-        }
-		else if ((($userid_filtre==$USER->id) || ($userid_filtre==0))
-            && ($isteacher || $iseditor|| $istutor)){
-			// Ajouter l'utilisateur courant pour qu'il puisse voir ses activites
-            $a_obj=new stdClass();
-            $a_obj->userid=$USER->id;
-            $record_id_users[]=$a_obj;
-		}
-
-        // information sur l'utilisateur =======================================
-
-        if ($record_id_users){
-			if (isset($mode) && (($mode=='updateactivity') || ($mode=='listactivityall') || ($mode=='listeactivity'))){
-				if ($mode=='updateactivity')
-                    echo referentiel_modifie_entete_activite_complete_filtre("activite.php?id=$cm->id&amp;select_acc=$select_acc&amp;courseid=$course->id&amp;userid=$userid_filtre&amp;mode=$mode&amp;sesskey=".sesskey(), $data_f, false, false);
-                else
-                    echo referentiel_modifie_entete_activite_complete_filtre("activite.php?id=$cm->id&amp;select_acc=$select_acc&amp;courseid=$course->id&amp;userid=$userid_filtre&amp;mode=$mode&amp;sesskey=".sesskey(), $data_f, false, true);
-			}
-			else{
-				echo referentiel_modifie_entete_activite_complete_filtre("activite.php?id=$cm->id&amp;select_acc=$select_acc&amp;courseid=$course->id&amp;userid=$userid_filtre&amp;mode=$mode&amp;sesskey=".sesskey(), $data_f, true);
-			}
-        }
-        // affichage de l'activite  ============================================
-        if (!empty($record_a)){
-			echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id).'</div>'."\n";
-            referentiel_print_activite_detail($record_a, $context, true, 0);
-            if (!$record_a->approved){
-                echo '<div align="center">'.referentiel_ajout_document($record_a, $mode, $select_acc)."</div>\n";
-            }
-		    // afficher le menu si on l'activité est affichee dans son propre cours de création
-            if ($record_a->ref_course == $COURSE->id){
-                referentiel_menu_activite($cm, $context, $activite_id, $referentiel_instance->id, $record_a->approved, 0, true, 'listeactivity');
-            }
-			else{
-				echo '<div align="center">'.get_string('activite_exterieure','referentiel').'</div>'."\n";
-			}
-
-        }
-    }
-}
-*/
 
 // ----------------------------------------------------
 function referentiel_activite_id($context, $mode, $cm, $instance, $activite_id, $bareme, $select_acc=0, $detail=true){
 global $COURSE;
 
 
-	// Specifique car on a l'id de l'activité
+	// Specifique car on a l'id de l'activite
     if ($activite_id){
     	$record_a=referentiel_get_activite($activite_id);
        	if (!empty($record_a)){
@@ -2228,7 +2053,7 @@ global $COURSE;
 			}
 		    // afficher le menu si on l'activité est affichee dans son propre cours de création
             if ($record_a->ref_course == $COURSE->id){
-                referentiel_menu_activite($cm, $context, $activite_id, $instance->id, $record_a->approved, 0, $detail, $mode);
+                referentiel_menu_activite($cm, $context, $record_a->id, $record_a->userid, $instance->id, $record_a->approved, 0, $detail, $mode);
             }
 			else{
 				echo '<div align="center">'.get_string('activite_exterieure','referentiel').'</div>'."\n";

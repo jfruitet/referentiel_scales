@@ -450,9 +450,14 @@ echo '<input type="radio" name="mailnow" value="1" />'.get_string('yes').' &nbsp
 		}
 	}
 	/////////////////// VALIDER ////////////////////////////////////////////
+	// http://localhost/moodle253/mod/referentiel/activite.php?id=3&select_acc=1&activite_id=2&mode=desapproveactivity&old_mode=listactivity&sesskey=DMAXwzwehY
 	else if (isset($mode) && ($mode=="approveactivity")){
 		if (isset($activite_id) && ($activite_id>0)){
 			//notice_yesno
+	        if (empty($old_mode)){
+    	        $old_mode="listactivityall";
+	        }
+
             echo $OUTPUT->confirm(get_string('confirmvalidateactivity','referentiel'),
 			'activite.php?d='.$referentiel->id.'&amp;select_acc='.$select_acc.'&amp;approved='.$activite_id.'&amp;userid='.$userid.'&amp;confirm=1&amp;mode='.$old_mode.'&amp;sesskey='.sesskey(),
 			'activite.php?d='.$referentiel->id.'&amp;select_acc='.$select_acc.'&amp;approved='.$activite_id.'&amp;userid='.$userid.'&amp;confirm=0&amp;mode='.$old_mode.'&amp;sesskey='.sesskey());
@@ -614,6 +619,5 @@ echo '<input type="radio" name="mailnow" value="1" />'.get_string('yes').' &nbsp
         if ($link_documents){
             echo '<span class="vert">'."\n".$link_documents."\n".'</span><br />'."\n";
         }
-
 	}
 }

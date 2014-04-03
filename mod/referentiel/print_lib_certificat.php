@@ -592,7 +592,7 @@ $data_f, $select_acc=0) {
     $cm = get_coursemodule_from_instance('referentiel', $referentiel_instance->id);
     $course = $DB->get_record('course', array('id' => $cm->course));
 	if (empty($cm) or empty($course)){
-        print_print_error('REFERENTIEL_ERROR 5 :: print_lib_activite.php :: You cannot call this script in that way');
+        print_print_error('REFERENTIEL_ERROR 5 :: print_lib_certificat.php :: You cannot call this script in that way');
 	}
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
@@ -649,12 +649,12 @@ $data_f, $select_acc=0) {
                 $record_id_users  = referentiel_get_students_course($course->id,0,0);  //seulement les stagiaires
 			}
             if ($gusers && $record_id_users){ // liste des utilisateurs du groupe courant
-				// echo "<br />DEBUG :: print_lib_activite.php :: 740 :: GUSERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_certificat.php :: 740 :: GUSERS<br />\n";
 				// print_object($gusers);
 				// echo "<br />\n";
 				// exit;
 				$record_users  = array_intersect($gusers, array_keys($record_id_users));
-				// echo "<br />DEBUG :: print_lib_activite.php :: 745 :: RECORD_USERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_certificat.php :: 745 :: RECORD_USERS<br />\n";
 				// print_r($record_users  );
 				// echo "<br />\n";
 				// recopier
@@ -717,7 +717,7 @@ $CFG->wwwroot.'/mod/referentiel/certificat.php',$initiale,$mode, $userid_filtre,
 
             // DEBUG
             /*
-            echo "<br />DEBUG :: print_lib_activite.php :: 2386<br />USERIDS : $userids<br />\n";
+            echo "<br />DEBUG :: print_lib_certificat.php :: 2386<br />USERIDS : $userids<br />\n";
             print_r($t_users_select);
             echo "<br />\n";
             print_r($record_id_users);
@@ -732,7 +732,7 @@ $CFG->wwwroot.'/mod/referentiel/certificat.php',$initiale,$mode, $userid_filtre,
                         $record_id_users[]=$a_obj;
 		}
 
-		// echo "<br />DEBUG :: print_lib_activite.php :: 1870 :: RECORD_USERS<br />\n";
+		// echo "<br />DEBUG :: print_lib_certificat.php :: 1870 :: RECORD_USERS<br />\n";
 		// print_r($record_users  );
 		// echo "<br />\n";
 		// afficher les activites
@@ -827,7 +827,7 @@ $data_f, $select_acc=0) {
     $cm = get_coursemodule_from_instance('referentiel', $referentiel_instance->id);
     $course = $DB->get_record('course', array('id' => $cm->course));
 	if (empty($cm) or empty($course)){
-        print_print_error('REFERENTIEL_ERROR 5 :: print_lib_activite.php :: You cannot call this script in that way');
+        print_print_error('REFERENTIEL_ERROR 5 :: print_lib_certificat.php :: You cannot call this script in that way');
 	}
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
@@ -882,12 +882,12 @@ $data_f, $select_acc=0) {
                 $record_id_users  = referentiel_get_students_course($course->id,0,0);  //seulement les stagiaires
 			}
             if ($gusers && $record_id_users){ // liste des utilisateurs du groupe courant
-				// echo "<br />DEBUG :: print_lib_activite.php :: 740 :: GUSERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_certificat.php :: 740 :: GUSERS<br />\n";
 				// print_object($gusers);
 				// echo "<br />\n";
 				// exit;
 				$record_users  = array_intersect($gusers, array_keys($record_id_users));
-				// echo "<br />DEBUG :: print_lib_activite.php :: 745 :: RECORD_USERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_certificat.php :: 745 :: RECORD_USERS<br />\n";
 				// print_r($record_users  );
 				// echo "<br />\n";
 				// recopier
@@ -950,7 +950,7 @@ $CFG->wwwroot.'/mod/referentiel/certificat.php?d='.$referentiel_instance->id.'&a
 
             // DEBUG
             /*
-            echo "<br />DEBUG :: print_lib_activite.php :: 2386<br />USERIDS : $userids<br />\n";
+            echo "<br />DEBUG :: print_lib_certificat.php :: 2386<br />USERIDS : $userids<br />\n";
             print_r($t_users_select);
             echo "<br />\n";
             print_r($record_id_users);
@@ -965,7 +965,7 @@ $CFG->wwwroot.'/mod/referentiel/certificat.php?d='.$referentiel_instance->id.'&a
                         $record_id_users[]=$a_obj;
 		}
 
-		// echo "<br />DEBUG :: print_lib_activite.php :: 1870 :: RECORD_USERS<br />\n";
+		// echo "<br />DEBUG :: print_lib_certificat.php :: 1870 :: RECORD_USERS<br />\n";
 		// print_r($record_users  );
 		// echo "<br />\n";
 		// afficher les activites
@@ -2489,12 +2489,12 @@ $protocole_link='';      //MODIF JF 2012/02/18
 			}
 
 			if ($gusers && $record_id_users){ // liste des utilisateurs du groupe courant
-				// echo "<br />DEBUG :: print_lib_activite.php :: 740 :: GUSERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_certificat.php :: 740 :: GUSERS<br />\n";
 				// print_object($gusers);
 				// echo "<br />\n";
 				$record_users  = array_intersect($gusers, array_keys($record_id_users));
 				// $record_users  = array_intersect_assoc($record_id_users, array_keys($gusers));
-				// echo "<br />DEBUG :: print_lib_activite.php :: 745 :: RECORD_USERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_certificat.php :: 745 :: RECORD_USERS<br />\n";
 				// print_r($record_users  );
 				// echo "<br />\n";
 				// recopier 
@@ -2551,7 +2551,7 @@ $protocole_link='';      //MODIF JF 2012/02/18
 
             // DEBUG
             /*
-            echo "<br />DEBUG :: print_lib_activite.php :: 2386<br />USERIDS : $userids<br />\n";
+            echo "<br />DEBUG :: print_lib_certificat.php :: 2386<br />USERIDS : $userids<br />\n";
             print_r($t_users_select);
             echo "<br />\n";
             print_r($record_id_users);

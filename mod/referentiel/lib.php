@@ -43,7 +43,6 @@ require_once($CFG->dirroot.'/calendar/lib.php');
 // 2010/10/18 : configuration
 require_once ("class/referentiel.class.php");
 
-
 // les constantes suivantes permettent de tuner le fonctionnement du module
 // a ne modifier qu'avec précaution
 define('MAXPAGE', 15);// Nombre maximal de pages pour la pagination des affichages

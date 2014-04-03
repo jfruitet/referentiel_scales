@@ -32,6 +32,7 @@ include('lib_task.php');
 include('print_lib_task.php');	// AFFICHAGES TACHES
 
 $instanceid   = optional_param('instanceid', 0, PARAM_INT);   // referentiel instance id
+$userid       = optional_param('userid', 0, PARAM_INT);   // userid if selected
 $sql          = optional_param('sql','', PARAM_TEXT);
 $lparams      = optional_param('lparams','', PARAM_TEXT);
 $pageNo       = optional_param('pageNo', 0, PARAM_INT);
@@ -169,6 +170,11 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 <input type="hidden" name="pageNo" value="'.$pageNo.'" />
 <!-- accompagnement -->
 <input type="hidden" name="select_acc" value="'.$selacc.'" />
+';
+			if (!empty($userid)){
+				echo '<input type="hidden" name="userid" value="'.$userid.'" />'."\n";
+			}
+			echo '
 <!-- These hidden variables are always the same -->
 <input type="hidden" name="sesskey"     value="'.sesskey().'" />
 <input type="hidden" name="modulename"    value="referentiel" />
@@ -190,7 +196,7 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 				}
                 referentiel_print_activite_detail($bareme, $record_a, $context, ($modeaff==1));
                 if ($record_a->ref_course==$course->id){
-                	referentiel_menu_activite($cm, $context, $record_a->id, $referentiel->id, $record_a->approved, $selacc, ($modeaff==1), $mode);
+                	referentiel_menu_activite($cm, $context, $record_a->id, $record_a->userid, $referentiel->id, $record_a->approved, $selacc, ($modeaff==1), $mode);
 	                if (!$record_a->approved){
     	           		echo '<div align="center">'.referentiel_ajout_document($record_a, $mode, $selacc)."</div>\n";
 					}

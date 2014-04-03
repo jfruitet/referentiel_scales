@@ -954,7 +954,7 @@ if (!empty($referentiel_instance)){
 				        // echo "<br />\n";
 				        // exit;
 				        $record_users  = array_intersect($gusers, array_keys($record_id_users));
-				        // echo "<br />DEBUG :: print_lib_activite.php :: 745 :: RECORD_USERS<br />\n";
+				        // echo "<br />DEBUG :: print_lib_task.php :: 745 :: RECORD_USERS<br />\n";
 				        // print_r($record_users  );
 				        // echo "<br />\n";
 
@@ -1075,7 +1075,7 @@ global $course;
 		}
 		array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
 		// 
-		// echo "<br />Debug :: print_lib_activite.php :: 1419 ::<br />\n";
+		// echo "<br />Debug :: print_lib_task.php :: 1419 ::<br />\n";
 		// print_r($t_users);
 		
 		// exit;
@@ -1196,7 +1196,7 @@ if (!empty($referentiel_instance)){
     $cm = get_coursemodule_from_instance('referentiel', $referentiel_instance->id);
     $course = $DB->get_record('course', array("id" => "$cm->course"));
 	if (empty($cm) or empty($course)){
-        print_error('REFERENTIEL_ERROR 5 :: print_lib_activite.php :: You cannot call this script in that way');
+        print_error('REFERENTIEL_ERROR 5 :: print_lib_task.php :: You cannot call this script in that way');
 	}
 	
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
@@ -1229,12 +1229,12 @@ if (!empty($referentiel_instance)){
 			// Get your userids the normal way
 			$record_id_users  = referentiel_get_students_course($course->id,0,0);  //seulement les stagiaires
 			if ($gusers && $record_id_users){ // liste des utilisateurs du groupe courant
-				// echo "<br />DEBUG :: print_lib_activite.php :: 740 :: GUSERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_task.php :: 740 :: GUSERS<br />\n";
 				// print_object($gusers);
 				// echo "<br />\n";
 				// exit;
 				$record_users  = array_intersect($gusers, array_keys($record_id_users));
-				// echo "<br />DEBUG :: print_lib_activite.php :: 745 :: RECORD_USERS<br />\n";
+				// echo "<br />DEBUG :: print_lib_task.php :: 745 :: RECORD_USERS<br />\n";
 				// print_r($record_users  );
 				// echo "<br />\n";
 				// recopier 

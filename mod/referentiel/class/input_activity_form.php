@@ -436,7 +436,7 @@ $mform->setDefault('mailnow', 0);
 
         // DEBUG
 /*
-echo "<br />DEBUG :: print_lib_activite.php :: 227\n";
+echo "<br />DEBUG :: input_activity_form.php :: 227\n";
 echo "<br /> T_ITEM_CODE<br />\n";
 print_object($t_item_code);
 */
