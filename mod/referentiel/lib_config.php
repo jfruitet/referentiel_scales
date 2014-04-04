@@ -126,7 +126,7 @@ function referentiel_hierarchical_display($referentiel_instance_id) {
     if (!isset($CFG->referentiel_hierarchy)){
 		$CFG->referentiel_hierarchy=0;  // autoriser la configuration locale
 	}
-    $hierarchy=0; // affichage hierarchique par defaut
+    $hierarchy=0; // affichage non hierarchique par defaut
 
     $referentiel_referentiel_id=referentiel_instance_get_referentiel($referentiel_instance_id);
 	if ($CFG->referentiel_hierarchy!=2){

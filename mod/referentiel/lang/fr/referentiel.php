@@ -55,7 +55,7 @@ $string['acces_interdit'] = 'Vous n\'avez pas accès à cette déclaration d\'ac
 $string['unknowformat'] = 'Format de donné inconnu : {$a}';
 
 $string['configuration_impression'] = 'Configuration impression';
-$string['hierarchy'] = 'Affichage non hiérarchique dans la saisie des compétences';
+$string['hierarchy'] = 'Affichage hiérarchique dans la saisie des compétences';
 $string['input_setting'] = 'Mode d\'affichage';
 $string['input_hierarchy'] = 'Affichage hiérarchique des compétences';
 $string['config_input'] =  'En fonction de la valeur de <i>referentiel_hierarchy</i>

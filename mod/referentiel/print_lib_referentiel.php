@@ -848,29 +848,7 @@ function referentiel_affiche_liste_codes_competence($separateur, $liste){
 	return str_replace($separateur, ' ', $liste);
 }
 
-/*************** SUPPRIME
-// ----------------------------------------------------
-function referentiel_selection_liste_codes_item_competence($separateur, $liste){
-// input : liste de code de la forme 'CODE''SEPARATEUR' 
-// retourne le selecteur
-	$nl='';
-	$s1='<input type="checkbox" id="code_item_';
-	$s2='" name="code_item[]" value="';
-	$s3='" />';
-	$s4='<label for="code_item_';
-	$s5='">';
-	$s6='</label> ';	
-	$tl=explode($separateur, $liste);
-	$ne=count($tl);
-	$select='';
-	for ($i=0; $i<$ne;$i++){
-		if (trim($tl[$i])!=""){
-			$nl.=$s1.$i.$s2.$tl[$i].$s3.$s4.$i.$s5.$tl[$i].$s6;
-		}
-	}
-	return $nl;
-}
-***************/
+
 
 // ----------------------------------------------------
 function referentiel_modifer_selection_liste_codes_item_competence($separateur, $liste_complete, $liste_saisie){

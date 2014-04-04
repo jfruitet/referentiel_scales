@@ -187,11 +187,11 @@ if (!empty($record) && !empty($course)){
         	else{
             	echo '<div class="invalide">'."\n";
         	}
-    		if (referentiel_hierarchical_display($referentiel->id)){
-				referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id);
+    		if (!referentiel_hierarchical_display($referentiel->id)){
+				echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id);
 			}
 			else{
-        		referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, true);
+        		echo referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, true);
 			}
 			echo '</div>'."\n";
     }
@@ -206,11 +206,11 @@ if (!empty($record) && !empty($course)){
     	$roles=referentiel_roles_in_instance($referentiel->id);
       
         if (($USER->id==$userid) && ($roles->is_student || $roles->is_guest)){ // c'est l'auteur qui affiche 
-			if (referentiel_hierarchical_display($referentiel->id)){
-				referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id);
+			if (!referentiel_hierarchical_display($referentiel->id)){
+				echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id);
 			}
 			else{
-        		referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, false);
+        		echo referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, true);
 			}
 	    }
 	    else{ // c'est un referent qui affiche
@@ -226,11 +226,11 @@ if (!empty($record) && !empty($course)){
 				referentiel_modifier_evaluation_codes_item($bareme, $referentiel_referentiel->id, $competences_activite, $competences_bareme, false, $activite_id);
     		}
 			else{
-	    		if (empty($CFG->referentiel_hierarchy)){
-					referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_activite, $activite_id);
+       			if (!referentiel_hierarchical_display($referentiel->id)){
+					echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_activite, $activite_id);
 				}
 				else{
-		    		referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, false);
+		    		echo referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, true);
 				}
 			}
 		

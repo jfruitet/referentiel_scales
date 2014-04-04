@@ -62,7 +62,7 @@ $string['acces_interdit'] = 'You can\'t access to that declaration.';
 $string['unknowformat'] = 'Data format unknown: {$a}';
 
 $string['configuration_impression'] = 'Printing Configuration';
-$string['hierarchy'] = 'Non hierarchical display mandatory in competencies input';
+$string['hierarchy'] = 'Hierarchical display mandatory in competencies input';
 $string['input_setting'] = 'Display mode';
 $string['input_hierarchy'] = 'Competencies\' Hierarchical Display';
 $string['config_input'] =  'En fonction de la valeur de <i>referentiel_hierarchy</i>

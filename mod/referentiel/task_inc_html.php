@@ -165,7 +165,14 @@ if (isset($mode) && ($mode=="addtask")){
     <td  align="left" colspan="2">
 	<b><?php  print_string('aide_saisie_competences','referentiel') ?>:</b>
 	<br />
-<?php  referentiel_selection_liste_codes_item_competence('/', $form->competences_task); ?>
+<?php
+if (!referentiel_hierarchical_display($referentiel->id)){
+    echo referentiel_selection_liste_codes_item_competence('/',$form->competences_task);
+}
+else{
+    echo '<br />'.referentiel_selection_liste_codes_item_hierarchique($referentiel_referentiel->id, true)."\n";
+}
+?>
     </td>
 </tr>
 <tr valign="top">
@@ -507,8 +514,12 @@ if ($auteur_info!=$new_auteur_info) {
 	<b><?php  print_string('aide_saisie_competences','referentiel') ?>:</b></td>
     <td align="left" colspan="3">	
 <?php
-    // referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_task);
-	referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_task, false);
+    if (!referentiel_hierarchical_display($referentiel->id)){
+		echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_task);
+	}
+	else{
+    	referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_task, false);
+	}
 ?>
     </td>
 </tr>
@@ -1034,10 +1045,14 @@ if ($auteur_info!=$new_auteur_info){
 <tr valign="top">
     <td align="right">
     	<b><?php  print_string('aide_saisie_competences','referentiel') ?>:</b></td>
-    <td align="left" colspan="3">    	
+    <td align="left" colspan="3">
 <?php
-//    referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_task);
-	referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_task, false);
+    if (!referentiel_hierarchical_display($referentiel->id)){
+		echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competence, $competences_task);
+	}
+	else{
+    	referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_task, false);
+	}
 ?>
     </td>
 </tr>
