@@ -75,9 +75,6 @@ function set_filtres_sql($type=''){
     global $data_f;
 	global $sql_f_where;
 	global $sql_f_order;
-	//echo "<br />DEBUG :: filtres.php :: Ligne 78 :: TYPE=$type\n";
-	//print_object( $data_f);
-
 	if ($type=='certificat'){
 		if (isset($data_f->f_valide) && ($data_f->f_valide=='1')){
 			$sql_f_where.=' AND (valide=1) ';

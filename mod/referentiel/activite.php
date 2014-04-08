@@ -207,11 +207,11 @@ $sql='';
 
     // utilisateur
     if (isset($action) && ($action=='selectuser')){
-		  if (!empty($userid) && confirm_sesskey() ){
+		if (!empty($userid) && confirm_sesskey() ){
 		  	$userid_filtre=$userid;
-		  }
-		  unset($form);
-		  unset($action);
+		}
+		unset($form);
+		unset($action);
     }
 
 /*
@@ -730,9 +730,8 @@ $sql='';
                     // DEBUG
                     //echo "<br>DEBUG :: 643 :: Params<br />\n";
 					//print_object($params);
-
-                   //echo "<br>DEBUG :: 646 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
-
+					//echo "<br>DEBUG :: 734 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
+					// Liste d'enregistrements à afficher'
 					if ($rec=$DB->get_record_sql($sql_count, $params)){
                     	// DEBUG
                     	// echo "<br>DEBUG :: 689 :: COUNT:<br>\n";
@@ -772,7 +771,7 @@ $sql='';
 		    	$sql = str_replace("<","&lt;",$sql);    // hack
 		    	$sql = str_replace("\n","",$sql);    // hack
 				// JavaScript Document
-				//echo "<br />DEBUG :: 719 :: ".htmlentities($sql)."\n";
+				// echo "<br />DEBUG :: activite.php :: 775 :: ".htmlentities($sql)."\n";
 				//echo "<br />DEBUG :: 862 :: ".urlencode($sql)."\n";
 				//exit;
 			    //$sql = str_replace('>','&gt;',$sql);    // hack
@@ -904,9 +903,7 @@ $sql='';
     		referentiel_activite_id($context, $mode, $cm, $referentiel, $activite_id, $bareme, $select_acc, ($mode=='listactivityall'));
 		}
 		else{
-			// Affichage des boites de selection et espace pour insertion Ajax
-    		//referentiel_activites_paginees($context, $mode, $cm, $course, $referentiel, $initiale, $userids, $userid_filtre, $gusers, $records_id_users, $divid, $data_f, $select_acc);
-			// afficher les activites
+			// Espace pour insertion Ajax
 			if ($records_id_users){
 				// Afficher
 				// ESPACE DEDIE A L'INSERTION AJAX

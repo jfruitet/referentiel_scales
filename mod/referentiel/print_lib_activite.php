@@ -139,19 +139,19 @@ $appli=$appli.'&amp;mode_select=selectetab';
 onchange="self.location=document.getElementById(\'selectetab_f_auteur\').f_auteur.options[document.getElementById(\'selectetab_f_auteur\').f_auteur.selectedIndex].value;">'."\n";
 	if (isset($data) && !empty($data)){
 		if ($data->f_auteur=='1'){
-			$s.='	<option value="'.$appli.'&amp;f_auteur=0&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('choisir','referentiel').'</option>'."\n";
-			$s.='	<option value="'.$appli.'&amp;f_auteur=1&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'" selected="selected">'.get_string('croissant','referentiel').'</option>'."\n";
-			$s.='	<option value="'.$appli.'&amp;f_auteur=-1&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('decroissant','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=0&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('choisir','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=1&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'" selected="selected">'.get_string('croissant','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=-1&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('decroissant','referentiel').'</option>'."\n";
 		}
 		else if ($data->f_auteur=='-1'){
-			$s.='	<option value="'.$appli.'&amp;f_auteur=0&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('choisir','referentiel').'</option>'."\n";
-			$s.='	<option value="'.$appli.'&amp;f_auteur=1&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('croissant','referentiel').'</option>'."\n";
-			$s.='	<option value="'.$appli.'&amp;f_auteur=-1&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'" selected="selected">'.get_string('decroissant','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=0&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('choisir','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=1&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('croissant','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=-1&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'" selected="selected">'.get_string('decroissant','referentiel').'</option>'."\n";
 		}
 		else{
-			$s.='	<option value="'.$appli.'&amp;f_auteur=0&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'" selected="selected">'.get_string('choisir','referentiel').'</option>'."\n";
-			$s.='	<option value="'.$appli.'&amp;f_auteur=1&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('croissant','referentiel').'</option>'."\n";
-			$s.='	<option value="'.$appli.'&amp;f_auteur=-1&amp;f_referent=0&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('decroissant','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=0&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'" selected="selected">'.get_string('choisir','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=1&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('croissant','referentiel').'</option>'."\n";
+			$s.='	<option value="'.$appli.'&amp;f_auteur=-1&amp;f_referent='.$data->f_referent.'&amp;f_validation='.$data->f_validation.'&amp;f_date_modif='.$data->f_date_modif.'&amp;f_date_modif_student='.$data->f_date_modif_student.'">'.get_string('decroissant','referentiel').'</option>'."\n";
 		}
 	}
 	else{
@@ -510,7 +510,7 @@ $t_users_lastname=array();
         // Should use this variable so that we don't break stuff every time a variable is added or changed.
         $baseurl = $CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;action=selectuser&amp;initiale=';
         $baseurl1 ='&amp;userids=';
-        $baseurl2 ='&amp;select_ac='.$select_acc.'&amp;mode='.$mode.'&amp;courseid='.$course->id.'&amp;sesskey='.sesskey();
+        $baseurl2 ='&amp;select_acc='.$select_acc.'&amp;mode='.$mode.'&amp;courseid='.$course->id.'&amp;sesskey='.sesskey();
 
         if (!empty($data_f)){
             $baseurl3='&amp;f_auteur='.$data_f->f_auteur.'&amp;f_referent='.$data_f->f_referent.'&amp;f_validation='.$data_f->f_validation.'&amp;f_date_modif='.$data_f->f_date_modif.'&amp;f_date_modif_student='.$data_f->f_date_modif_student;

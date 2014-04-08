@@ -438,7 +438,7 @@ function referentiel_get_student_roles(){
 // rechercher les rôles dont l'archetype est student
 
 global $DB;
-    $teacherroles= array();
+    $studentroles= array();
 
     $params=array('student');
     $sql= "SELECT distinct id FROM {role} WHERE (archetype = ?) ";
@@ -468,12 +468,12 @@ global $CFG;
 global $DB;
     $studentsids=array();
 	if (! $course = $DB->get_record("course", array("id" => "$courseid"))) {
-		if (!$quiet) print_error("Course ID is incorrect");
+		if (!$quiet) print_error("lib_users.php :: 471 :: Course ID is incorrect");
 		else return false;
 	}
     $context = get_context_instance(CONTEXT_COURSE, $course->id);
 	if (! $context) {
-		if (!$quiet) print_error("Context ID is incorrect");
+		if (!$quiet) print_error("lib_users.php :: 476 :: Context ID is incorrect");
 		else return false;
 	}
 
@@ -518,6 +518,7 @@ global $DB;
  **/
 function referentiel_get_students_course_v2($courseid, $userid=0, $roleid=0, $quiet=false){
 // This function returns records list of students from course
+// obsolete acr ne retroune pas les rôles derives du role student
 global $DB;
 global $CFG;
 	if (! $course = $DB->get_record("course", array("id" => "$courseid"))) {

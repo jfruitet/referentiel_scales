@@ -155,7 +155,7 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 			    // Jauge d'activite
 				if ($userid_old!=$record_a->userid){
                     $userid_old=$record_a->userid;
-					echo '<tr valign="top"><td colspan="8" align="center">'."\n";
+					echo '<tr><td class="centree" colspan="8">'."\n";
                     echo get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id)."\n";
 					echo '</td></tr>'."\n";
 				}
