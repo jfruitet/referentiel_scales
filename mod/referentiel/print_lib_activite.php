@@ -468,20 +468,19 @@ $s="";
 
 // ----------------------
 function referentiel_order_users($recs_activity, $order=0){
-// retourne une liste ordonn‚e
+// retourne une liste d'activit‚s ordonn‚e par utilisateur
 $t_users=array();
-$t_activity=array();
 $t_users_firstname=array();
 $t_users_lastname=array();
     if ($recs_activity){
-	    foreach ($recs_activity as $record_a) {   // liste d'id users
-   			//print_objcet($record_a);
+	    foreach ($recs_activity as $record_a) {   // liste d'activites
+   			//print_object($record_a);
 
 			if (!empty($record_a->userid)){
 				$firstname= referentiel_get_user_prenom($record_a->userid);
                 $lastname = referentiel_get_user_nom($record_a->userid);
-                $t_activity[]=$record_a;
-			    $t_users[]= array('id' => $record_a->userid, 'lastname' => $lastname, 'firstname' => $firstname);
+                //$t_activity[]=$record_a;
+			    $t_users[]= array('id' => $record_a->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'activity' => $record_a );
 			    $t_users_lastname[] = $lastname;
 			    $t_users_firstname[]= $firstname;
             }
@@ -492,36 +491,12 @@ $t_users_lastname=array();
 		else{
             array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
 		}
+		$recs_activity=array();
+		for($i=0; $i< count($t_users); $i++){
+			$recs_activity[]=$t_users[$i]['activity'];
+		}
 	}
-	//echo "<br />DEBUG :: print_lib_activite.php :: referentiel_order_users :: 495 :: T_ACTIVITY\n";
-	//print_object ($t_activity);
-	//echo "<br />DEBUG :: print_lib_activite.php :: referentiel_order_users :: 497 :: T_USERS\n";
-	//print_object ($t_users);
-	$records=array();
-	for($i=0; $i< count($t_users); $i++){
-		$a = new Object();
-   		$a->id=$t_activity[$i]->id;
-        $a->type_activite=$t_activity[$i]->type_activite;
-        $a->description_activite=$t_activity[$i]->description_activite;
-        $a->competences_activite=$t_activity[$i]->competences_activite;
-        $a->commentaire_activite=$t_activity[$i]->commentaire_activite;
-        $a->ref_instance=$t_activity[$i]->ref_instance;
-        $a->ref_referentiel=$t_activity[$i]->ref_referentiel;
-        $a->ref_course=$t_activity[$i]->ref_course;
-        $a->userid=$t_users[$i]['id'];
-        $a->teacherid=$t_activity[$i]->teacherid;
-        $a->date_creation=$t_activity[$i]->date_creation;
-        $a->date_modif_student=$t_activity[$i]->date_modif_student;
-        $a->date_modif=$t_activity[$i]->date_modif;
-        $a->approved=$t_activity[$i]->approved;
-        $a->ref_task=$t_activity[$i]->ref_task;
-        $a->mailed=$t_activity[$i]->mailed;
-        $a->mailnow=$t_activity[$i]->mailnow;
-
-		$records[]=$a;
-
-	}
-	return $records;
+	return $recs_activity;
 }
 
 
