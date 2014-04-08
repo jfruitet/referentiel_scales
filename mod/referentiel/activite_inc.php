@@ -103,12 +103,21 @@ echo '<br /><br />'."\n";
 echo '<span class="bold">'.get_string('aide_saisie_competences','referentiel').'</span>'."\n";
 echo '<br />'."\n";
 // MODIF JF 2013/10/03
+/*
+if (!referentiel_hierarchical_display($referentiel->id)){
+	echo referentiel_modifier_selection_liste_codes_item_competence('/', $form->competences_activite, $form->competences_activite);
+}
+else{
+	echo referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $form->competences_activite, true);
+}
+*/
 if (!referentiel_hierarchical_display($referentiel->id)){
     echo referentiel_selection_liste_codes_item_competence('/',$form->competences_activite);
 }
 else{
     echo '<br />'.referentiel_selection_liste_codes_item_hierarchique($referentiel_referentiel->id, true)."\n";
 }
+
 echo '<br />'."\n";
 echo '<br />'."\n";
 echo '	<span class="bold">'.get_string('depot_document','referentiel').'</span>'."\n";

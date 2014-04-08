@@ -1,7 +1,7 @@
 <?php
 // referentiel module
 //
-
+$string['modifactivity'] = 'Modify';
 $string['eval_bareme'] = 'Evaluation  with scales';
 $string['eval_sans_bareme'] = 'Evaluation without scales';
 $string['click_to_load'] = 'Click here to load the page';

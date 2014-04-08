@@ -355,10 +355,14 @@ $record_id_users=array();
 					$record_id_users[]=$a;
 				}
 			}
-			// Ajouter l'utilisateur courant pour qu'il voit ses activités
+			// Ajouter l'utilisateur courant pour qu'il voit ses activites
 			$a = new Object();
 			$a->userid=$USER->id;
 			$record_id_users[]=$a;
+        	// DEBUG
+			//echo "<br>DEBUG :: 363 :: prin_lib_users.php :: <br>\n";
+    		//print_object($record_id_users);
+			//exit;
             echo referentiel_select_users_activite_accompagnes($userid_filtre, $select_acc, $mode);
             echo referentiel_select_users_activite_2($record_id_users, $userid_filtre, $select_acc, $mode, $initiale);
 		}
@@ -383,6 +387,7 @@ $record_id_users=array();
             // retourne les etudiants du cours ou userid_filtre si != 0
             $record_id_users = referentiel_get_students_course($course->id, $userid_filtre, 0);
         }
+
 		// afficher le groupe courant
 		if ($record_id_users && $gusers){ // liste des utilisateurs du groupe courant
 			$record_users  = array_intersect($gusers, array_keys($record_id_users));
@@ -411,6 +416,7 @@ $record_id_users=array();
 			$a->userid=$USER->id;
 			$record_id_users[]=$a;
 		}
+
 	}
 	else{
 		// seulement l'utilisateur courant
@@ -460,6 +466,63 @@ $s="";
 	return $s;
 }
 
+// ----------------------
+function referentiel_order_users($recs_activity, $order=0){
+// retourne une liste ordonn‚e
+$t_users=array();
+$t_activity=array();
+$t_users_firstname=array();
+$t_users_lastname=array();
+    if ($recs_activity){
+	    foreach ($recs_activity as $record_a) {   // liste d'id users
+   			//print_objcet($record_a);
+
+			if (!empty($record_a->userid)){
+				$firstname= referentiel_get_user_prenom($record_a->userid);
+                $lastname = referentiel_get_user_nom($record_a->userid);
+                $t_activity[]=$record_a;
+			    $t_users[]= array('id' => $record_a->userid, 'lastname' => $lastname, 'firstname' => $firstname);
+			    $t_users_lastname[] = $lastname;
+			    $t_users_firstname[]= $firstname;
+            }
+		}
+		if ($order==-1){
+			array_multisort($t_users_lastname, SORT_DESC, $t_users_firstname, SORT_ASC, $t_users);
+		}
+		else{
+            array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
+		}
+	}
+	//echo "<br />DEBUG :: print_lib_activite.php :: referentiel_order_users :: 495 :: T_ACTIVITY\n";
+	//print_object ($t_activity);
+	//echo "<br />DEBUG :: print_lib_activite.php :: referentiel_order_users :: 497 :: T_USERS\n";
+	//print_object ($t_users);
+	$records=array();
+	for($i=0; $i< count($t_users); $i++){
+		$a = new Object();
+   		$a->id=$t_activity[$i]->id;
+        $a->type_activite=$t_activity[$i]->type_activite;
+        $a->description_activite=$t_activity[$i]->description_activite;
+        $a->competences_activite=$t_activity[$i]->competences_activite;
+        $a->commentaire_activite=$t_activity[$i]->commentaire_activite;
+        $a->ref_instance=$t_activity[$i]->ref_instance;
+        $a->ref_referentiel=$t_activity[$i]->ref_referentiel;
+        $a->ref_course=$t_activity[$i]->ref_course;
+        $a->userid=$t_users[$i]['id'];
+        $a->teacherid=$t_activity[$i]->teacherid;
+        $a->date_creation=$t_activity[$i]->date_creation;
+        $a->date_modif_student=$t_activity[$i]->date_modif_student;
+        $a->date_modif=$t_activity[$i]->date_modif;
+        $a->approved=$t_activity[$i]->approved;
+        $a->ref_task=$t_activity[$i]->ref_task;
+        $a->mailed=$t_activity[$i]->mailed;
+        $a->mailnow=$t_activity[$i]->mailnow;
+
+		$records[]=$a;
+
+	}
+	return $records;
+}
 
 
 // ----------------------
@@ -1685,19 +1748,34 @@ function referentiel_menu_activite($cm, $context, $activite_id, $userid, $refere
 function referentiel_selection_liste_codes_item_competence($separateur, $liste){
 // input : liste de code de la forme 'CODE''SEPARATEUR'
 // retourne le selecteur
+	global $t_item_description_competence;
+
 	$nl='';
 	$s1='<input type="checkbox" id="code_item_';
 	$s2='" name="code_item[]" value="';
 	$s3='" />';
 	$s4='<label for="code_item_';
 	$s5='">';
-	$s6='</label> ';
+	$s6='</label> '."\n";
 	$tl=explode($separateur, $liste);
-	$ne=count($tl);
-	$select='';
-	for ($i=0; $i<$ne;$i++){
-		if (trim($tl[$i])!=""){
-			$nl.=$s1.$i.$s2.$tl[$i].$s3.$s4.$i.$s5.$tl[$i].$s6;
+	if (!isset($t_item_description_competence) || (!$t_item_description_competence)){
+		$ne=count($tl);
+		$select='';
+		for ($i=0; $i<$ne;$i++){
+			if (trim($tl[$i])!=""){
+				//$nl.=$s1.$i.$s2.$tl[$i].$s3.$s4.$i.$s5.$tl[$i].$s6;
+				echo $s1.$i.$s2.$tl[$i].$s3.$s4.$i.$s5.$tl[$i].$s6;
+			}
+		}
+	}
+	else{
+		$ne=count($tl);
+		$select='';
+		for ($i=0; $i<$ne;$i++){
+			if (trim($tl[$i])!=""){
+				// $nl.=$s1.$i.$s2.$tl[$i].$s3.$s4.$i.$s5.referentiel_affiche_overlib_un_item($separateur, $tl[$i]).$s6;
+				echo $s1.$i.$s2.$tl[$i].$s3.$s4.$i.$s5.referentiel_affiche_overlib_un_item($separateur, $tl[$i]).$s6;
+			}
 		}
 	}
 	return $nl;

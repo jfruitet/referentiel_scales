@@ -93,10 +93,10 @@ if (!empty($record) && !empty($course)){
 		$approved = $record->approved;
 		$ref_task = $record->ref_task;
 		if ($ref_task>0){ // remplacer par la liste definie dans la tache
-			$liste_codes_competences_tache=referentiel_get_liste_codes_competence_tache($ref_task);
+			$liste_codes_competences_a_afficher=referentiel_get_liste_codes_competence_tache($ref_task);
 		}
 		else{
-			$liste_codes_competences_tache=$liste_codes_competence;
+			$liste_codes_competences_a_afficher=$liste_codes_competence;
 		}
 		$user_info=referentiel_get_user_info($userid);
 		$teacher_info=referentiel_get_user_info($teacherid);
@@ -188,7 +188,7 @@ if (!empty($record) && !empty($course)){
             	echo '<div class="invalide">'."\n";
         	}
     		if (!referentiel_hierarchical_display($referentiel->id)){
-				echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id);
+				echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_a_afficher, $competences_activite, $activite_id);
 			}
 			else{
         		echo referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, true);
@@ -207,7 +207,7 @@ if (!empty($record) && !empty($course)){
       
         if (($USER->id==$userid) && ($roles->is_student || $roles->is_guest)){ // c'est l'auteur qui affiche 
 			if (!referentiel_hierarchical_display($referentiel->id)){
-				echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_tache, $competences_activite, $activite_id);
+				echo referentiel_modifier_selection_liste_codes_item_competence('/', $liste_codes_competences_a_afficher, $competences_activite, $activite_id);
 			}
 			else{
         		echo referentiel_modifier_selection_codes_item_hierarchique($referentiel_referentiel->id, $competences_activite, true);

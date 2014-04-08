@@ -39,6 +39,7 @@ $pageNo       = optional_param('pageNo', 0, PARAM_INT);
 $perPage      = optional_param('perPage', 1, PARAM_INT);
 $selacc       = optional_param('selacc', 0, PARAM_INT);
 $modeaff      = optional_param('modeaff', 0, PARAM_INT);
+$order    	  = optional_param('order', 1, PARAM_INT);
 
 	if ($modeaff==1){
 		$mode='listactivityall';
@@ -91,7 +92,7 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 		$sql = str_replace('&gt;','>',$sql);    // hack
         $sql = str_replace('&lt;','<',$sql);    // hack
 
-    	//echo "<br />DEBUG :: 82 :: Length : ".strlen($sql)." : ".htmlspecialchars($sql)."\n";
+    	//echo "<br />DEBUG :: 95 :: Length : ".strlen($sql)." : ".htmlspecialchars($sql)."\n";
     }
 
     if (!empty($lparams)){
@@ -110,10 +111,18 @@ $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 
     if ($recs=$DB->get_records_sql($sql, $params)){
 		// DEBUG
-		//echo "<br />DEBUG :: list_activites_users.php :: 107 : RECORD<br />\n";
+		//echo "<br />DEBUG :: list_activites_users.php :: 113 : RECORD<br />\n";
 		//print_object( $recs);
+
 		// affichage
 		// preparer les variables globales pour Overlib
+        // DEBUG
+		//echo "<br>DEBUG :: 696:: CROISSANT : $order<br>\n";
+        $recs=referentiel_order_users($recs, $order);
+ 		//echo "<br />DEBUG :: list_activites_users.php :: 122 : RECORD TRIES<br />\n";
+		//print_object( $recs);
+		//exit;
+
 		referentiel_initialise_descriptions_items_referentiel($referentiel_referentiel->id);
         //Bareme
 		$bareme=NULL;

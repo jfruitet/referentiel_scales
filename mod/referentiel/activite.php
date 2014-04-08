@@ -688,17 +688,14 @@ $sql='';
 		$records_id_users=referentiel_get_liste_users_pagination($course, $referentiel, ($isteacher || $iseditor|| $istutor), $userids, $userid_filtre, $gusers, $select_acc);
 		// afficher les activites des utilisateurs
         // DEBUG
-		//echo "<br>DEBUG :: 642 :: RECORD ID USERS :<br>\n";
-    	//print_object($records_id_users);
-
+		// echo "<br>DEBUG :: 642 :: RECORD ID USERS :<br>\n";
+    	// print_object($records_id_users);
+		// exit;
 		if ($records_id_users){
-        	// DEBUG
-			//echo "<br>DEBUG :: 706:: RECORD ID USERS :<br>\n";
-    	    //print_object($records_id_users);
 	    	if (!empty($referentiel->ref_referentiel)){
 				$params=array();
                 if ($sql_f_order==''){
-                    $sql_order='  userid ASC, date_creation DESC ';
+                    $sql_order=''; //'  userid ASC, date_creation DESC ';
                 }
                 else{
                     $sql_order=$sql_f_order;
@@ -708,9 +705,13 @@ $sql='';
                 $sql = 'SELECT * FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
                 $sql_count = 'SELECT COUNT(id) as nb FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
                 $sql_users='';
-
-                $sql_order= ' '.$sql_f_where.' ORDER BY '.$sql_order;
-                //
+				if ($sql_order){
+                	$sql_where_order= ' '.$sql_f_where.' ORDER BY '.$sql_order;
+                }
+				else{
+                    $sql_where_order= ' '.$sql_f_where;
+				}
+				//
 				foreach ($records_id_users as $rec){
             		//print_r($rec);
                     $params[]=$rec->userid;
@@ -725,12 +726,12 @@ $sql='';
 
                 if (!empty($sql_users)){
                     $sql_users .=") ";
-                    $sql=addslashes($sql.$sql_users.$sql_order);
-                    $sql_count=$sql_count.$sql_users.$sql_order;
+                    $sql=addslashes($sql.$sql_users.$sql_where_order);
+                    $sql_count=$sql_count.$sql_users.$sql_where_order;
                     // DEBUG
-                    //echo "<br>DEBUG :: 643 :: Params<br />\n";
+                    //echo "<br>DEBUG :: 738 :: Params<br />\n";
 					//print_object($params);
-					//echo "<br>DEBUG :: 734 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
+					//echo "<br>DEBUG :: 740 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
 					// Liste d'enregistrements à afficher'
 					if ($rec=$DB->get_record_sql($sql_count, $params)){
                     	// DEBUG
@@ -777,7 +778,7 @@ $sql='';
 			    //$sql = str_replace('>','&gt;',$sql);    // hack
 			    //$sql = str_replace('<','&lt;',$sql);    // hack
 			    //$onload= " onload=\"javascript:ajaxPaging(pagename='".$pageName."',pageNo='1',instanceid='".$referentiel->id."',sql='".$sql."',div='".$divid."',totalPage='".$totalPage."',perPage='".$perPage."',selacc='".$select_acc."',modeaff='".$modeaff."') \"";
-				$ajaxvalue = "'".urlencode($pageName)."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."','".$userid_filtre."'";
+				$ajaxvalue = "'".urlencode($pageName)."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."','".$userid_filtre."','".$order."'";
 				//$ajaxvalue = "'".$pageName."',1,".$referentiel->id.",'".$sql."','".$lparams."','".$divid."',".$totalPage.",".$perPage.",".$select_acc.",".$modeaff."";
 		    	//echo $ajaxvalue;
 				$onclick="javascript:ajaxPaging(".$ajaxvalue.");";

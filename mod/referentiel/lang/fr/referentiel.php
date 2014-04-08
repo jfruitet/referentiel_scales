@@ -2,6 +2,8 @@
 // ----------------
 // UTF-8 French
 //
+
+$string['modifactivity'] = 'Modifier';
 $string['eval_bareme'] = 'Evaluer avec barème';
 $string['eval_sans_bareme'] = 'Evaluer sans barème';
 $string['click_to_load'] = 'Cliquer ici pour charger la page';
