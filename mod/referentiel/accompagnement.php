@@ -25,7 +25,7 @@
     require_once('../../config.php');
     require_once('locallib.php');
 
-    include('print_lib_accompagnement.php');	// ACCOMPAGNEMENT
+    require_once('print_lib_accompagnement.php');	// ACCOMPAGNEMENT
     require_once('lib_repartition.php');	// REPARTION COMPETENCES
     require_once('print_lib_repartition.php');	// REPARTION COMPETENCES
 
