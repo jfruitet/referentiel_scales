@@ -172,11 +172,13 @@ function set_filtres_sql($type=''){
 				$sql_f_order.=' userid DESC ';
 		}
  */
- 		$order=1;
-		if (isset($data_f->f_auteur) && ($data_f->f_auteur=='-1')){
+ 		$order=0;
+        if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
+            $order=1;
+		}
+		else if (isset($data_f->f_auteur) && ($data_f->f_auteur=='-1')){
             $order=-1;
 		}
-
 	}
 	//echo "<br />DEBUG :: filtres.php :: Ligne 198 :: FILTRES : WHERE=".htmlentities($sql_f_where)."<br />ORDER=".htmlentities($sql_f_order)."\n";
 }

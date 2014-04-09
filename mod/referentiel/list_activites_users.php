@@ -118,11 +118,12 @@ $order    	  = optional_param('order', 1, PARAM_INT);
 		// preparer les variables globales pour Overlib
         // DEBUG
 		//echo "<br>DEBUG :: 696:: CROISSANT : $order<br>\n";
-        $recs=referentiel_order_users($recs, $order);
- 		//echo "<br />DEBUG :: list_activites_users.php :: 122 : RECORD TRIES<br />\n";
-		//print_object( $recs);
-		//exit;
-
+		if (!empty($order)) {
+        	$recs=referentiel_order_users($recs, $order);
+ 			//echo "<br />DEBUG :: list_activites_users.php :: 122 : RECORD TRIES<br />\n";
+			//print_object( $recs);
+			//exit;
+		}
 		referentiel_initialise_descriptions_items_referentiel($referentiel_referentiel->id);
         //Bareme
 		$bareme=NULL;
