@@ -172,7 +172,7 @@ function set_filtres_sql($type=''){
 				$sql_f_order.=' userid DESC ';
 		}
  */
- 		$order=0;
+ 		$order=1;
         if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
             $order=1;
 		}

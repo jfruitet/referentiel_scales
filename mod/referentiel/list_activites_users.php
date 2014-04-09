@@ -39,7 +39,7 @@ $pageNo       = optional_param('pageNo', 0, PARAM_INT);
 $perPage      = optional_param('perPage', 1, PARAM_INT);
 $selacc       = optional_param('selacc', 0, PARAM_INT);
 $modeaff      = optional_param('modeaff', 0, PARAM_INT);
-$order    	  = optional_param('order', 1, PARAM_INT);
+$order    	  = optional_param('order', 0, PARAM_INT);
 
 	if ($modeaff==1){
 		$mode='listactivityall';
