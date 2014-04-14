@@ -250,7 +250,7 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 					echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id).'</div>'."\n";
 
                     if ($modeaff==2){ //
- 						if ($t_users_count[$index_user]>0){ // nb activites
+ 						if (($index_user>=0) && isset($t_users_count[$index_user]) && $t_users_count[$index_user]>0){ // nb activites
 							echo '<div align="center"><i>'.get_string('activitynumber','referentiel',$t_users_count[$index_user]).'</i></div>'."\n";
 						}
 					}

@@ -115,14 +115,7 @@ $sql='';
 	if ($mode=='list'){
         $mode='listactivity';
 	}
-	// DEBUG
-	//echo "<br /> DEBUG :: activite.php :: 68 :: MODE : $mode\n";
-    /*
-	  if ($mode=='bilanactivity'){
-        $modeaff=3;
-	}
-    else
-	*/
+
 	if ($mode=='listactivity'){
         $modeaff=2;
 	}
@@ -719,10 +712,7 @@ $sql='';
 	                $sql = 'SELECT * FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
                 	$sql_count = 'SELECT COUNT(id) as nb FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
 				}
-				//else{
-                	$sql2 = 'SELECT DISTINCT userid AS userid, COUNT(id) AS activitynumber FROM {referentiel_activite}  WHERE ref_referentiel=? AND ';
-                //	$sql_count = '';
-				//}
+               	$sql2 = 'SELECT DISTINCT userid AS userid, COUNT(id) AS activitynumber FROM {referentiel_activite}  WHERE ref_referentiel=? AND ';
 
                 $sql_users='';
 				if ($sql_order){
@@ -731,7 +721,7 @@ $sql='';
 				else{
                     $sql_where_order= ' '.$sql_f_where;
 				}
-				//
+
 				foreach ($records_id_users as $rec){
             		//print_r($rec);
                     $params[]=$rec->userid;
@@ -966,50 +956,6 @@ $sql='';
 					}
 				}
 			}
-			/*
-            else {     // bilan
-				// Afficher les bilans
-    			// Requête
-    			if (!empty($sql)){
-					// DEBUG
-					//echo "<br />DEBUG :: 898 :: Length : ".strlen($sql)." :  ".htmlspecialchars($sql)."\n";
-                    $sql=stripslashes($sql);
-					//echo "<br />DEBUG :: 901 :: Length : ".htmlspecialchars($sql)."\n";
-
-                    if ($recs=$DB->get_records_sql($sql, $params)){
-
-						if (!empty($order)) {
-        					$recs=referentiel_order_users_count($records_id_users, $recs, $order);
-						}
-
-						//echo "<br />DEBUG :: list_activites_users.php :: 122 : RECORD TRIES<br />\n";
-						//print_object( $recs);
-						//exit;
-						// preparer les variables globales pour Overlib
-						referentiel_initialise_descriptions_items_referentiel($referentiel_referentiel->id);
-						foreach($recs as $record_a){
-                            $liste_groupes= referentiel_liste_groupes_user($course->id, $record_a->userid);
-							if ($record_a->activitynumber>0){// Jauge d'activite
-								echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id)."\n";
-								if (!empty($liste_groupes)){
-        							echo ' &nbsp; ('.$liste_groupes.')'."\n";
-					        	}
-								echo ' &nbsp; ('.get_string('activitynumber','referentiel').'<i>'.$record_a->activitynumber.'</i>)'."\n";
-								echo '</div>'."\n";
-								referentiel_menu_activite_user($cm, $context, $record_a->userid, $referentiel->id, $select_acc, $mode);
-							}
-							else{
-                                echo '<div align="center" class="surligne">'.referentiel_print_aucune_activite_user($record_a->userid)."\n";
-                                if (!empty($liste_groupes)){
-        							echo ' &nbsp; ('.$liste_groupes.')'."\n";
-					        	}
-								echo '</div>'."\n";
-							}
-						}
-					}
-                }
-			}
-			*/
 		}
 	}
 
