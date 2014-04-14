@@ -102,7 +102,7 @@
         var url= urldecode(pagename);
         var xhr=createXHR();
         //xhr.open("GET",pagename+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff, true);
-        xhr.open("GET",url+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff+'&userid='+userid+'&order='+order, true);
+        xhr.open("GET",url+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff+'&userid='+userid+'&order='+order+'&totalPage='+totalPage, true);
 
 		document.getElementById(div).innerHTML="Started...";
         //document.getElementById(div).innerHTML='<img src="ajax-loader.gif" id="loader">';

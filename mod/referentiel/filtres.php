@@ -158,20 +158,20 @@ function set_filtres_sql($type=''){
 			else
 				$sql_f_order.=' date_modif_student DESC ';
 		}
-/*
+
 		if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
 			if ($sql_f_order!='')
-				$sql_f_order.=', userid ASC ';
+				$sql_f_order.=', userid ASC  ';
 			else
-				$sql_f_order.=' userid ASC ';
+				$sql_f_order.=' userid ASC , date_creation DESC ';
 		}
 		else if (isset($data_f->f_auteur) && ($data_f->f_auteur=='-1')){
 			if ($sql_f_order!='')
 				$sql_f_order.=', userid DESC ';
 			else
-				$sql_f_order.=' userid DESC ';
+				$sql_f_order.=' userid DESC , date_creation DESC ';
 		}
- */
+
  		$order=1;
         if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
             $order=1;

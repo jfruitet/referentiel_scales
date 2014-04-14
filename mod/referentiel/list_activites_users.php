@@ -37,6 +37,7 @@ $sql          = optional_param('sql','', PARAM_TEXT);
 $lparams      = optional_param('lparams','', PARAM_TEXT);
 $pageNo       = optional_param('pageNo', 0, PARAM_INT);
 $perPage      = optional_param('perPage', 1, PARAM_INT);
+$totalPage     = optional_param('totalPage', 0, PARAM_INT);
 $selacc       = optional_param('selacc', 0, PARAM_INT);
 $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 $order    	  = optional_param('order', 0, PARAM_INT);
@@ -52,7 +53,7 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 	}
 
 // DEBUG
-// echo "DEBUG :: list_activites_users.php :: 42 :: <br> $instanceid , ".htmlspecialchars($sql).",$lparams, $pageNo, $perPage\n";
+// echo "DEBUG :: list_activites_users.php :: 56 :: <br> $instanceid , ".htmlspecialchars($sql).",$lparams, $pageNo, $perPage, $totalPage\n";
 // echo "<br>MODEAFF : $modeaff\n";
 // echo "<br>SELECT_ACC : $selacc\n";
 //exit;
@@ -95,11 +96,37 @@ $order    	  = optional_param('order', 0, PARAM_INT);
     	//echo "<br />DEBUG :: 95 :: Length : ".strlen($sql)." : ".htmlspecialchars($sql)."\n";
     }
 
+	//echo "<br />DEBUG :: list_activity_users :: 98<br />\n";
+    $t_users=array();
+	$t_users_count=array();
     if (!empty($lparams)){
-		$params=explode('|',$lparams);
+		//  1|3:1|4:1|5:1|6:1|7:1|8:5|12:2|11:0|
+		$listeparams=explode('|',$lparams);
+		foreach($listeparams as $aparam){
+			if ($aparam){
+	            //echo "<br />\n";
+				//print_object($aparam);
+				if (!preg_match("/:/", $aparam)){
+					$params[]=$aparam;
+				}
+				else{
+					$aua=explode(':',$aparam);
+            	    $params[]=$aua[0];
+                    $t_users[]=$aua[0];
+                	$t_users_count[]=$aua[1];
+				}
+			}
+		}
 	}
-
-
+	/*
+	echo "<br />T_USERS\n";
+    print_object($t_users);
+    echo "<br />T_USERS_COUNT\n";
+	print_object($t_users_count);
+	echo "<br />\n";
+    print_object($params);
+	//exit;
+	*/
 	// DEBUG
     //echo "<br>DEBUG :: list_activites_users.php :: 697 :: Params<br />\n";
 	//print_object($params);
@@ -107,7 +134,7 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 	$fin=  $deb + $perPage;
 	$limit = ' LIMIT '.$deb.', '.$fin;
     $sql.=$limit;
-    // echo "<br />DEBUG :: lib_activites_users.php :: 102 :: Length : ".strlen($sql)." <br /> ".htmlspecialchars($sql)."\n";
+    //echo "<br />DEBUG :: lib_activites_users.php :: 136 <br /> ".htmlspecialchars($sql)."\n";
 
     if ($recs=$DB->get_records_sql($sql, $params)){
 		// DEBUG
@@ -141,7 +168,11 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 			}
 		}
 
-        $userid_old=0;  // pour la jauge
+		// compteurs pour afficher les jauges et activites a bon escient
+        $userid_old=0;
+		$index_user=-1;
+        $s_no_activity='';
+
         if ($modeaff==0){
 			// formulaire global
 			//echo "\n\n".'<form name="form" id="form" action="activite.php?id='.$cm->id.'&course='.$course->id.'&mode='.$mode.'&filtre_auteur='.$data_filtre->filtre_auteur.'&filtre_validation='.$data_filtre->filtre_validation.'&filtre_referent='.$data_filtre->filtre_referent.'&filtre_date_modif='.$data_filtre->filtre_date_modif.'&filtre_date_modif_student='.$data_filtre->filtre_date_modif_student.'&select_acc='.$select_acc.'&sesskey='.sesskey().'" method="post">'."\n";
@@ -165,6 +196,7 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 			    // Jauge d'activite
 				if ($userid_old!=$record_a->userid){
                     $userid_old=$record_a->userid;
+
 					echo '<tr><td class="centree" colspan="8">'."\n";
                     echo get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id)."\n";
 					echo '</td></tr>'."\n";
@@ -200,9 +232,28 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 			// affichage
 			foreach($recs as $record_a){
                 // Jauge d'activite
+                $index_user=get_index($record_a->userid, $t_users);
 				if ($userid_old!=$record_a->userid){
                     $userid_old=$record_a->userid;
+	                //if (($modeaff==2) && (($pageNo==1) || ($index_old>0))){ // Afficher les prédécesseurs sans activite
+					if ($modeaff==2){
+						$s_no_activity='';
+						$k=$index_user-1; // rechercher les prédécesseurs sans activite
+						while (($k>=0) &&  ($t_users_count[$k]==0)){
+							$s_no_activity='<div align="center" class="surligne">'.referentiel_print_aucune_activite_user($t_users[$k]).'</div><br />'."\n" . $s_no_activity;
+							$k--;
+						}
+                		if (!empty($s_no_activity)) {
+    	    				echo $s_no_activity;
+						}
+					}
 					echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id).'</div>'."\n";
+
+                    if ($modeaff==2){ //
+ 						if ($t_users_count[$index_user]>0){ // nb activites
+							echo '<div align="center"><i>'.get_string('activitynumber','referentiel',$t_users_count[$index_user]).'</i></div>'."\n";
+						}
+					}
 				}
                 referentiel_print_activite_detail($bareme, $record_a, $context, ($modeaff==1));
                 if ($record_a->ref_course==$course->id){
@@ -216,7 +267,36 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 				}
 				echo '<br />'."\n";
 			}
+
+			if (($modeaff==2) && ($pageNo==$totalPage)){ // rechercher les successeurs sans activite
+                //echo "DEBUG 274 :<br />INDEX_USER $index_user\n";
+				if ($index_user>=0){
+                	$s_no_activity='';
+					$k=$index_user;
+					while ($k<count($t_users)){
+						if ($t_users_count[$k]==0){
+							$s_no_activity.='<div align="center" class="surligne">'.referentiel_print_aucune_activite_user($t_users[$k]).'</div><br />'."\n";
+						}
+						$k++;
+					}
+                	if (!empty($s_no_activity)) {
+    	    			echo $s_no_activity;
+					}
+				}
+			}
         }
+
     }
     
+	// -------------------------------------
+	function get_index($userid, $t_users){
+		$i=0;
+		while ($i<count($t_users)){
+			if ($t_users[$i]==$userid){
+				return $i;
+			}
+			$i++;
+		}
+		return -1;
+	}
 ?>

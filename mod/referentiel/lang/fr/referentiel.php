@@ -2,7 +2,8 @@
 // ----------------
 // UTF-8 French
 //
-
+$string['bilanactivity'] = 'Bilan';
+$string['activitynumber'] = '{$a} activités.';
 $string['modifactivity'] = 'Modifier';
 $string['eval_bareme'] = 'Evaluer avec barème';
 $string['eval_sans_bareme'] = 'Evaluer sans barème';

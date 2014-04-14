@@ -195,17 +195,22 @@ function display(){
                 $tabs[] = $row;
                 $activetwo = array('menuacc');
             }
+
         	// ACTIVITE
             if (isset($this->currenttab) && (($this->currenttab == 'list')
+                // || ($this->currenttab == 'bilanactivity')
         		|| ($this->currenttab == 'listactivity')
         		|| ($this->currenttab == 'listactivityall')
 		        || ($this->currenttab == 'addactivity')
         		|| ($this->currenttab == 'updateactivity')
         		|| ($this->currenttab == 'exportactivity')
+
             ))
             {
         		$row  = array();
                 $inactive[] = 'list';
+		        //$url_param['mode']='bilanactivity';
+				//$row[] = new tabobject('bilanactivity', new moodle_url('/mod/referentiel/activite.php', $url_param),  get_string('bilanactivity','referentiel'));
 		        $url_param['mode']='listactivity';
 				$row[] = new tabobject('listactivity', new moodle_url('/mod/referentiel/activite.php', $url_param),  get_string('listactivity','referentiel'));
 

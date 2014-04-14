@@ -1,6 +1,8 @@
 <?php
 // referentiel module
 //
+$string['activitynumber'] = '{$a} activities.';
+$string['bilanactivity'] = 'Assessment';
 $string['modifactivity'] = 'Modify';
 $string['eval_bareme'] = 'Evaluation  with scales';
 $string['eval_sans_bareme'] = 'Evaluation without scales';
@@ -775,75 +777,49 @@ $string['oblig_item'] = 'Liste des items obligatoires';
 $string['seuil_protocole'] = 'Protocole de certification<br />Seuil';
 
 // Version 2012/03/02
-$string['a_completer'] ='A compléter';
+$string['a_completer'] ='To cmplete';
 $string['c_domaine'] ='D';
 $string['c_competence'] ='C';
 $string['c_item'] ='I';
 
-$string['activation_protocole'] ='Activation du protocole de certification';
-$string['protocole_active'] ='Protocole de certification activé ';
-$string['protocole_desactive'] ='Protocole de certification désactivé ';
-$string['depuis'] =' depuis le {$a} ';
-$string['aide_activation'] = 'Seuils et items / compétences / domaines obligatoires ne sont pris en compte que si le protocole est activé.';
-$string['non_certifiable'] = 'Non certifiable';
+$string['activation_protocole'] ='Certification Protocol Activation';
+$string['protocole_active'] ='Certification protocol activated ';
+$string['protocole_desactive'] ='Certification protocol unactivated ';
+$string['depuis'] =' since the {$a} ';
+$string['aide_activation'] = 'Thresholds and mandatory items / competencies / domaine are used only if the protocol is activated.';
+$string['non_certifiable'] = 'No certifiable';
 $string['certifiable'] = 'Certifiable';
 
 
 // Version 6.2.01 - 2012/02/12
 $string['declarer_activite'] = 'Déclarer une activité et des compétences';
-$string['type_domaine'] = 'Domaine obligatoire (Oui, Non)';
-$string['seuil_domaine'] = 'Seuil du domaine (Nb. décimal)';
-$string['type_competence'] = 'Compétence obligatoire (Oui, Non)';
-$string['seuil_competence'] = 'Seuil de compétence (Nb. décimal)';
-$string['bilan'] = 'Bilan de compétence';
-$string['competences_valides'] = 'Compétences (1:validée 0:non validée)';
-$string['validite'] = '<b>Nb</b> / Total (<i>Seuil</i>) Certificabilité';
+$string['type_domaine'] = 'Mandatoru Domain (Yes, No)';
+$string['seuil_domaine'] = 'Domain Threshold (Decimal)';
+$string['type_competence'] = 'Mandatory Competency (Yes, No)';
+$string['seuil_competence'] = 'Competency Threshold (Decimal)';
+$string['bilan'] = 'Competencies assessment';
+$string['competences_valides'] = 'Competencies (1:validated 0:non validated)';
+$string['validite'] = '<b>Nb</b> / Total (<i>Threshold</i>) Certificability';
 $string['validable'] = 'Validable';
 $string['non_validable'] = 'Non validable';
 
-$string['ask_pass'] = '(Mot de passe initial créé par {$a})';
-$string['error_pass'] = 'Erreur de mot de passe.<br>'.$string['ask_pass'];
+$string['ask_pass'] = '(Initial pass created by {$a})';
+$string['error_pass'] = 'Pasword error.<br>'.$string['ask_pass'];
 
-$string['definir_protocole'] = 'Protocole de certification';
-$string['gestion_protocole'] = 'Gestion du protocole de certification';
-$string['protocole'] = 'Protocole';
-$string['item_obligatoires'] = 'Items oblig. <i>P.</i> E.';
-$string['competences_oblig_seuil'] = '[Comp. obl.][Min/<i>Max</i>][Seuil/<i>S(P*E)</i>]';
-$string['domaines_oblig_seuil'] =    '[Dom. obl.][Min/<i>Max</i>][Seuil/<i>S(P*E)</i>]';
-$string['aide_protocole'] = 'Cochez les items / compétences / domaines obligatoires
-<br />et indiquez le seuil de certification pour les compétences et les domaines...
-<br />(Valeurs nulles non prises en compte dans le protocole)';
+$string['definir_protocole'] = 'Certification Protocol';
+$string['gestion_protocole'] = 'Certification Protocol Mnagement';
+$string['protocole'] = 'Protocol';
+$string['item_obligatoires'] = 'Mandatory Items. <i>P.</i> E.';
+$string['competences_oblig_seuil'] = '[Comp. mand.][Min/<i>Max</i>][Threshold/<i>S(P*E)</i>]';
+$string['domaines_oblig_seuil'] =    '[Dom. mand.][Min/<i>Max</i>][Threshold/<i>S(P*E)</i>]';
+$string['aide_protocole'] = 'Check mandatory items / competencies / domaine
+<br />and give a certification Threshold for competencies (skills) et domains...
+<br />(Null Values not used by the protocol)';
 $string['aide_protocole_completer'] = 'A REMPLACER...
 [En jouant sur items / compétences / domaines obligatoires et les seuils de certification vous pouvez exprimer des contraintes concernant le protocole de certification...]';
 $string['aide_seuil'] = 'Valeur totale minimale des items validés (fonction des poids et empreintes) sous réserve de conditions supplémentaires imposées.';
 
 
-// Version 2012/02/12
-$string['declarer_activite'] = 'Déclarer une activité et des compétences';
-$string['type_domaine'] = 'Domaine obligatoire (Oui, Non)';
-$string['seuil_domaine'] = 'Seuil du domaine (Nb. décimal)';
-$string['type_competence'] = 'Compétence obligatoire (Oui, Non)';
-$string['seuil_competence'] = 'Seuil de compétence (Nb. décimal)';
-$string['bilan'] = 'Bilan de compétence';
-$string['competences_valides'] = 'Compétences (1:validée 0:non validée)';
-$string['validite'] = '<b>Nb</b> / Total (<i>Seuil</i>) Validité';
-$string['validable'] = 'Validable';
-$string['non_validable'] = 'Non validable';
-
-$string['ask_pass'] = '(Mot de passe initial créé par {$a})';
-$string['error_pass'] = 'Erreur de mot de passe.<br>'.$string['ask_pass'];
-
-$string['gestion_protocole'] = 'Gestion du protocole de certification';
-$string['protocole'] = 'Protocole';
-$string['item_obligatoires'] = 'Items oblig. <i>P.</i> E.';
-$string['competences_oblig_seuil'] = 'Comp. obl. Seuil / <i>P.</i>';
-$string['domaines_oblig_seuil'] =    'Dom. obl. Seuil / <i>P.</i>';
-$string['aide_protocole'] = 'Cochez les items / compétences / domaines obligatoires
-<br />et indiquez le seuil de certification pour les compétences et les domaines...
-<br />(Valeurs nulles non prises en compte dans le protocole)';
-$string['aide_protocole_completer'] = 'A REMPLACER...
-[En jouant sur items / compétences / domaines obligatoires et les seuils de certification vous pouvez exprimer des contraintes concernant le protocole de certification...]';
-$string['aide_seuil'] = 'Nombre minimal d\'items validés sous réserve de conditions supplémentaires imposées.';
 
 // Outcomes
 $string['usedoutcomes'] = 'Skills repository Outcomes used in the site activities modules';

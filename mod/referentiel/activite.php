@@ -64,7 +64,9 @@ $sql='';
 
     $mode_select = optional_param('mode_select','', PARAM_ALPHANUMEXT);
     $select_acc = optional_param('select_acc', -1, PARAM_INT);      // accompagnement
+    $order    	  = optional_param('order', 0, PARAM_INT);
     $userbareme = optional_param('userbareme', 0, PARAM_INT); // si un bareme est utilise pour la saisie
+
 
     // Filtres
     require_once('filtres.php'); // Ne pas deplacer
@@ -115,7 +117,13 @@ $sql='';
 	}
 	// DEBUG
 	//echo "<br /> DEBUG :: activite.php :: 68 :: MODE : $mode\n";
-    if ($mode=='listactivity'){
+    /*
+	  if ($mode=='bilanactivity'){
+        $modeaff=3;
+	}
+    else
+	*/
+	if ($mode=='listactivity'){
         $modeaff=2;
 	}
     elseif ($mode=='listactivityall'){
@@ -494,6 +502,7 @@ $sql='';
 							// DEBUG
 							//echo "<br />DEBUG : activite.php :: 426 UTILISE BAREME<br />FORMULAIR INPUT<br />\n";
 							//print_object($form3);
+							//exit;
 							if (!empty($form3['baremeid']) && !empty($form3['nbitems'])){
 								$liste_evaluations='';
 								for ($k=0; $k<$form3['nbitems']; $k++){
@@ -506,13 +515,16 @@ $sql='';
 								}
 							}
 							// DEBUG
-							// echo "<br />DEBUG : activite.php :: 444 <br />FORMULAIRE OUTPUT<br />\n";
-							// print_object($form3);
+							//echo "<br />DEBUG : activite.php :: 512 <br /> LISTE_EVALUATION : $liste_evaluations<br />FORMULAIRE BAREME OUTPUT<br />\n";
+							//print_object($form3);
+                            //exit;
 							// enregistrer les evaluations
 							require_once('lib_bareme.php');
 							referentiel_enregistrer_evaluation_activite($liste_evaluations, $activite_id, $form3['baremeid']);
 						}
-
+						//echo "<br />DEBUG : activite.php :: 519 <br /> FORMULAIRE ENREGISTRE<br />\n";
+						//print_object($form);
+                        //exit;
                         $return = $updatefunction($form);
                         if (!$return) {
                             print_error("Could not update activity $form->id of the referentiel", 'error', "activite.php?d=$referentiel->id");
@@ -695,15 +707,23 @@ $sql='';
 	    	if (!empty($referentiel->ref_referentiel)){
 				$params=array();
                 if ($sql_f_order==''){
-                    $sql_order=''; //'  userid ASC, date_creation DESC ';
+                    //$sql_order=''; //'  userid ASC, date_creation DESC ';
+                    $sql_order='  userid ASC, date_creation DESC ';
                 }
                 else{
                     $sql_order=$sql_f_order;
                 }
                 $params[]=$referentiel->ref_referentiel;
 
-                $sql = 'SELECT * FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
-                $sql_count = 'SELECT COUNT(id) as nb FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
+                if (($modeaff>=0) && ($modeaff<3)) { // mode==listactivityall or mode==modifyactivity
+	                $sql = 'SELECT * FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
+                	$sql_count = 'SELECT COUNT(id) as nb FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
+				}
+				//else{
+                	$sql2 = 'SELECT DISTINCT userid AS userid, COUNT(id) AS activitynumber FROM {referentiel_activite}  WHERE ref_referentiel=? AND ';
+                //	$sql_count = '';
+				//}
+
                 $sql_users='';
 				if ($sql_order){
                 	$sql_where_order= ' '.$sql_f_where.' ORDER BY '.$sql_order;
@@ -727,20 +747,37 @@ $sql='';
                 if (!empty($sql_users)){
                     $sql_users .=") ";
                     $sql=addslashes($sql.$sql_users.$sql_where_order);
+                    $sql2=addslashes($sql2.$sql_users);
                     $sql_count=$sql_count.$sql_users.$sql_where_order;
-                    // DEBUG
-                    //echo "<br>DEBUG :: 738 :: Params<br />\n";
-					//print_object($params);
-					//echo "<br>DEBUG :: 740 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
-					// Liste d'enregistrements à afficher'
+	                    // DEBUG
+    	                //echo "<br>DEBUG :: 738 :: Params<br />\n";
+						//print_object($params);
+						//echo "<br>DEBUG :: 740 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
+						// Liste d'enregistrements à afficher'
 					if ($rec=$DB->get_record_sql($sql_count, $params)){
                     	// DEBUG
-                    	// echo "<br>DEBUG :: 689 :: COUNT:<br>\n";
-                    	// print_object($rec);
-                    	$totalRecords=$rec->nb;
+	                    //echo "<br>DEBUG :: 758 :: COUNT:<br>\n";
+    	                //print_object($rec);
+        	            $totalRecords=$rec->nb;
 					}
+                    $sql2 .= ' GROUP BY userid ';
                 }
             }
+
+			// Liste des bilans d'activite
+			$sql2=stripslashes($sql2);
+			//echo "<br />DEBUG :: 770 :: Length : ".htmlspecialchars($sql2)."\n";
+            //print_object($params);
+			if ($recs_bilans=$DB->get_records_sql($sql2, $params)){
+       			$recs_bilans=referentiel_order_users_count($records_id_users, $recs_bilans, $order);
+				//print_object($recs_bilans);
+                $lparams=$params[0].'|';
+                foreach($recs_bilans as $rcb){
+					$lparams.= $rcb->userid.':'.$rcb->activitynumber.'|';
+				}
+                //echo "<br />DEBUG :: 779 :: LPARAMS : ".$lparams."\n";
+				//exit;
+			}
 
 			if ($totalRecords >0){
             	// nombre de pages à afficher
@@ -756,7 +793,7 @@ $sql='';
                 	$perPage=ceil((float)$totalRecords / (float)$totalPage);       // nombre d'enregistrements par page
             	}
 				*/
-                //echo "<br />DEBUG :: 710 :: totalRecords:".$totalRecords." nombrePage:".$nombrePage." totalPage:".$totalPage." perPage:".$perPage." PageNo:".$pageNo."\n";
+                //echo "<br />DEBUG :: 795 :: totalRecords:".$totalRecords." nombrePage:".$nombrePage." totalPage:".$totalPage." perPage:".$perPage." PageNo:".$pageNo."\n";
 
 				if ($pageNo>$totalPage){
                     $pageNo=1;
@@ -764,7 +801,7 @@ $sql='';
                 //echo "<br />DEBUG :: 689 :: PageNo:".$pageNo."\n";
 				//exit;
 				// params
-				$lparams=implode('|',$params);
+				// $lparams=implode('|',$params);
 		    	//echo "<br />DEBUG :: 778 :: ".$lparams."\n";
     			//echo "<br />DEBUG :: 862 :: ".urlencode($sql)."\n";
 				//exit;
@@ -784,6 +821,8 @@ $sql='';
 				$onclick="javascript:ajaxPaging(".$ajaxvalue.");";
     			//$onclick="javascript:affiche2($value);";
 			}
+
+
         }
 	}
 
@@ -904,10 +943,12 @@ $sql='';
     		referentiel_activite_id($context, $mode, $cm, $referentiel, $activite_id, $bareme, $select_acc, ($mode=='listactivityall'));
 		}
 		else{
-			// Espace pour insertion Ajax
-			if ($records_id_users){
-				// Afficher
-				// ESPACE DEDIE A L'INSERTION AJAX
+			if ($modeaff<3){
+
+				// Espace pour insertion Ajax
+				if ($records_id_users){
+					// Afficher
+					// ESPACE DEDIE A L'INSERTION AJAX
 ?>
 <!-- Espace insertion -->
 <div id="pagin" class="pagination">
@@ -915,15 +956,60 @@ $sql='';
 <div id="<?php echo $divid;?>">
 </div>
 <?php
-				echo '<br /><br />'."\n";
-				if (!empty($onclick)){
-					echo '<!-- Espace chargement -->
+					echo '<br /><br />'."\n";
+					if (!empty($onclick)){
+						echo '<!-- Espace chargement -->
 <div id="loadin" align="center">
 <!-- button id="clickme" onclick="'.$onclick.'">'.get_string('click_to_load','referentiel').'</button -->
 <img src="'.$OUTPUT->pix_url('ajax-loader','referentiel').'" onload="'.$onclick.'">
 </div>'."\n";
+					}
 				}
 			}
+			/*
+            else {     // bilan
+				// Afficher les bilans
+    			// Requête
+    			if (!empty($sql)){
+					// DEBUG
+					//echo "<br />DEBUG :: 898 :: Length : ".strlen($sql)." :  ".htmlspecialchars($sql)."\n";
+                    $sql=stripslashes($sql);
+					//echo "<br />DEBUG :: 901 :: Length : ".htmlspecialchars($sql)."\n";
+
+                    if ($recs=$DB->get_records_sql($sql, $params)){
+
+						if (!empty($order)) {
+        					$recs=referentiel_order_users_count($records_id_users, $recs, $order);
+						}
+
+						//echo "<br />DEBUG :: list_activites_users.php :: 122 : RECORD TRIES<br />\n";
+						//print_object( $recs);
+						//exit;
+						// preparer les variables globales pour Overlib
+						referentiel_initialise_descriptions_items_referentiel($referentiel_referentiel->id);
+						foreach($recs as $record_a){
+                            $liste_groupes= referentiel_liste_groupes_user($course->id, $record_a->userid);
+							if ($record_a->activitynumber>0){// Jauge d'activite
+								echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id)."\n";
+								if (!empty($liste_groupes)){
+        							echo ' &nbsp; ('.$liste_groupes.')'."\n";
+					        	}
+								echo ' &nbsp; ('.get_string('activitynumber','referentiel').'<i>'.$record_a->activitynumber.'</i>)'."\n";
+								echo '</div>'."\n";
+								referentiel_menu_activite_user($cm, $context, $record_a->userid, $referentiel->id, $select_acc, $mode);
+							}
+							else{
+                                echo '<div align="center" class="surligne">'.referentiel_print_aucune_activite_user($record_a->userid)."\n";
+                                if (!empty($liste_groupes)){
+        							echo ' &nbsp; ('.$liste_groupes.')'."\n";
+					        	}
+								echo '</div>'."\n";
+							}
+						}
+					}
+                }
+			}
+			*/
 		}
 	}
 

@@ -124,6 +124,7 @@ define('MAXLIGNEGRAPH', 15);  // Nombre de lignes par graphique
 /// CRON
 require_once ("lib_users.php");
 require_once ("lib_repartition.php"); // version 1.2 decembre 2011
+require_once ("lib_accompagnement.php"); // version 1.2 decembre 2011
 require_once ("lib_cron.php");
 /// CONFIGURATION
 
