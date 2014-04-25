@@ -44,6 +44,9 @@ Référentiel pour Moodle 2.4, 2.5 avec barèmes
 Referentiel for Moodle 2.4, 2.5  with scales support
 ---------------------------------------------
 Version 10.00 (2014022803) for Moodle 2.4 et 2.5 with scale support and block
+Release 2014-04-25
+Correction bug empêchant la suppression d'un document attaché
+Suppression des caractères accentués dans les noms des fichiers d'archives
 Release 2014-04-14
 Simplification interface
 Release 2014-04-10
