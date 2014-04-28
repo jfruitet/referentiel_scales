@@ -49,9 +49,9 @@
         <FIELD NAME="logo_referentiel" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="local" NEXT="config"/>
         <FIELD NAME="config" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="scol:0;creref:0;selref:0;impcert:0;graph:0;light:0;hierarchy:0;cfcertif:0;certif:1;" SEQUENCE="false" PREVIOUS="logo_referentiel" NEXT="config_impression"/>
         <FIELD NAME="config_impression" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="refcert:1;instcert:0;numetu:1;nometu:1;etabetu:0;ddnetu:0;lieuetu:0;adretu:0;detail:1;pourcent:0;compdec:0;compval:1;nomreferent:0;jurycert:1;comcert:0;" SEQUENCE="false" PREVIOUS="config" NEXT="label_domaine"/>
-        <FIELD NAME="label_domaine" TYPE="char" LENGTH="80" NOTNULL="false" DEFAULT="" PREVIOUS="config_impression" NEXT="label_competence"/>
-        <FIELD NAME="label_competence" TYPE="char" LENGTH="80" NOTNULL="false" DEFAULT="" PREVIOUS="label_domaine" NEXT="label_item"/>
-        <FIELD NAME="label_item" TYPE="char" LENGTH="80" NOTNULL="false" DEFAULT="" PREVIOUS="label_competence"/>
+        <FIELD NAME="label_domaine" TYPE="char" LENGTH="80" NOTNULL="false" DEFAULT="" SEQUENCE="false" PREVIOUS="config_impression" NEXT="label_competence"/>
+        <FIELD NAME="label_competence" TYPE="char" LENGTH="80" NOTNULL="false" DEFAULT="" SEQUENCE="false" PREVIOUS="label_domaine" NEXT="label_item"/>
+        <FIELD NAME="label_item" TYPE="char" LENGTH="80" NOTNULL="false" DEFAULT="" SEQUENCE="false" PREVIOUS="label_competence"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for referentiel_referentiel"/>
