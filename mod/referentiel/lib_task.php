@@ -708,6 +708,7 @@ function referentiel_association_user_task($ref_user, $ref_task, $referent_id=0,
 //  cree l'activite a partir de l'association
 global $DB;
 global $USER;
+global $CFG;
 
 	$activite_id=0;
 	if ($ref_task && $ref_user){
@@ -773,6 +774,36 @@ global $USER;
 					$record_association->ref_activite=$activite_id;
 					$record_association->date_selection=time();
 					$id_a = $DB->insert_record("referentiel_a_user_task", $record_association);
+
+					// Traiter le bareme
+					if ($CFG->referentiel_use_scale){
+						require_once('lib_bareme.php');
+
+						if ($rec_assoc=referentiel_get_assoc_bareme_occurrence($activite->ref_referentiel)){
+							// DEBUG
+							//echo "<br />ASSOC BAREME<br />\n";
+							//print_object($rec_assoc);
+							//echo "<br />\n";
+                           							// DEBUG
+
+							if ($bareme=referentiel_get_bareme($rec_assoc->refscaleid)){
+                                $liste_evaluations='';
+								//echo "<br />BAREME<br />\n";
+								//print_object($bareme);
+								//echo "<br />\n";
+                                $tcompetences=explode("/",$activite->competences_activite);
+								foreach ($tcompetences as $comp){
+                                    if ($comp){
+										$liste_evaluations.=$comp.':'.  $bareme->threshold.'/';
+									}
+								}
+								//echo "<br />DEBUG :: lib_task.php :: 804 :: LISTE $liste_evaluations<br />\n";
+
+                                $id_eval=referentiel_enregistrer_evaluation_activite($liste_evaluations, $activite_id, $bareme->id);
+                                //echo "<br />INSERTION $id_eval<br />\n";
+							}
+						}
+					}
 				}
 			}
 		}

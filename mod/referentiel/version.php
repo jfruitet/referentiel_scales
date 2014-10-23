@@ -11,7 +11,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$module=new StdClass();
+// $module=new StdClass();
 // $module->requires = 2012112900;  // Requires this Moodle version  2.5
 $module->requires = 2012120300;  // Requires this Moodle version  2.4
 $module->version  = 2014022803;  // The current module version (Date: YYYYMMDDXX)
