@@ -45,7 +45,7 @@
 
 
     // dessine la barre de selection des pages
-	function redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid, order)
+	function redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid, order, pagination)
 	{
         var i;
         var pagingstr;
@@ -57,7 +57,7 @@
 		{
             if (i != pageNo)
 			{
-                pagingstr = pagingstr + ' <a href="javascript:ajaxPaging(\''+pagename+'\',pageNo=\''+i+'\',instanceid=\''+instanceid+'\',sql=\''+sql+'\',lparams=\''+lparams+'\',div=\''+div+'\',totalPage=\''+totalPage+'\',perPage=\''+perPage+'\',selacc=\''+selacc+'\',modeaff=\''+modeaff+'\',userid=\''+userid+'\',order=\''+order+'\')">'+i+'</a> ';
+                pagingstr = pagingstr + ' <a href="javascript:ajaxPaging(\''+pagename+'\',pageNo=\''+i+'\',instanceid=\''+instanceid+'\',sql=\''+sql+'\',lparams=\''+lparams+'\',div=\''+div+'\',totalPage=\''+totalPage+'\',perPage=\''+perPage+'\',selacc=\''+selacc+'\',modeaff=\''+modeaff+'\',userid=\''+userid+'\',order=\''+order+'\',pagination=\''+pagination+'\')">'+i+'</a> ';
                 //alert(i);
 			}
 			else
@@ -96,20 +96,20 @@
     }
 
     // lance l'appel au script des requetes par Ajax
-	function ajaxPaging(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid, order)
+	function ajaxPaging(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid, order, pagination)
 	{
 	// alert(sql);
         var url= urldecode(pagename);
         var xhr=createXHR();
         //xhr.open("GET",pagename+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff, true);
-        xhr.open("GET",url+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff+'&userid='+userid+'&order='+order+'&totalPage='+totalPage, true);
+        xhr.open("GET",url+'?pageNo='+pageNo+'&perPage='+perPage+'&instanceid='+instanceid+'&sql='+sql+'&lparams='+lparams+'&selacc='+selacc+'&modeaff='+modeaff+'&userid='+userid+'&order='+order+'&pagination='+pagination, true);
 
-		document.getElementById(div).innerHTML="Started...";
-        //document.getElementById(div).innerHTML='<img src="ajax-loader.gif" id="loader">';
+		//document.getElementById(div).innerHTML="Started...";
+        document.getElementById(div).innerHTML='Started... <img src="ajax-loader.gif" id="loader">';
 
 		xhr.onreadystatechange=function()
 		{
-			document.getElementById(div).innerHTML="Wait server...";
+			document.getElementById(div).innerHTML='Wait server... <img src="ajax-loader.gif" id="loader">';
 
 			if(xhr.readyState == 4)
 			{
@@ -119,6 +119,6 @@
 
 		xhr.send(null);
 
-		redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid, order);
+		redraw(pagename, pageNo, instanceid, sql, lparams, div, totalPage, perPage, selacc, modeaff, userid, order, pagination);
 
 	}

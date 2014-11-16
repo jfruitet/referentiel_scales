@@ -689,6 +689,10 @@ a.select:hover {
 	COLOR: Navy;
 }
 
+.grise {
+	BACKGROUND-COLOR: lightgrey;
+	COLOR: Red;
+}
 
 .small {
 	font-size : 80%;

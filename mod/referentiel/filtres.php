@@ -76,6 +76,9 @@ function set_filtres_sql($type=''){
 	global $sql_f_where;
 	global $sql_f_order;
 	global $order;
+	//echo "<br />DEBUG :: filtres.php :: Ligne 78 :: TYPE=$type\n";
+	//print_object( $data_f);
+
 	if ($type=='certificat'){
 		if (isset($data_f->f_valide) && ($data_f->f_valide=='1')){
 			$sql_f_where.=' AND (valide=1) ';
@@ -103,7 +106,6 @@ function set_filtres_sql($type=''){
 			else
 				$sql_f_order.=' date_decision DESC ';
 		}
-
 		if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
 			if ($sql_f_order!='')
 				$sql_f_order.=', userid ASC ';
@@ -116,7 +118,6 @@ function set_filtres_sql($type=''){
 			else
 				$sql_f_order.=' userid DESC ';
 		}
-
 	}
 	else{
 		if (isset($data_f->f_validation) && ($data_f->f_validation=='1')){
@@ -148,39 +149,49 @@ function set_filtres_sql($type=''){
 
 		if (isset($data_f->f_date_modif_student) && ($data_f->f_date_modif_student=='1')){
 			if ($sql_f_order!='')
-				$sql_f_order.=', date_modif_student ASC ';
+				$sql_f_order.=', date_modif_student ASC, date_creation ASC ';
 			else
-				$sql_f_order.=' date_modif_student ASC ';
+				$sql_f_order.=' date_modif_student ASC, date_creation ASC ';
 		}
 		else if (isset($data_f->f_date_modif_student) && ($data_f->f_date_modif_student=='-1')){
 			if ($sql_f_order!='')
-				$sql_f_order.=', date_modif_student DESC ';
+				$sql_f_order.=', date_modif_student DESC, date_creation DESC ';
 			else
-				$sql_f_order.=' date_modif_student DESC ';
+				$sql_f_order.=' date_modif_student DESC, date_creation DESC ';
 		}
-
+/*
 		if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
 			if ($sql_f_order!='')
-				$sql_f_order.=', userid ASC  ';
+				$sql_f_order.=', userid ASC ';
 			else
-				$sql_f_order.=' userid ASC , date_creation DESC ';
+				$sql_f_order.=' userid ASC ';
 		}
 		else if (isset($data_f->f_auteur) && ($data_f->f_auteur=='-1')){
 			if ($sql_f_order!='')
 				$sql_f_order.=', userid DESC ';
 			else
-				$sql_f_order.=' userid DESC , date_creation DESC ';
+				$sql_f_order.=' userid DESC ';
 		}
-
- 		$order=1;
-        if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
-            $order=1;
-		}
-		else if (isset($data_f->f_auteur) && ($data_f->f_auteur=='-1')){
+*/
+		if (isset($data_f->f_auteur) && ($data_f->f_auteur=='-1')){
+			if ($sql_f_order!='')
+				$sql_f_order.=', u.lastname DESC, u.firstname DESC, u.id DESC ';
+			else
+				$sql_f_order.=' u.lastname DESC, u.firstname DESC, u.id DESC  ';
             $order=-1;
 		}
+        // if (isset($data_f->f_auteur) && ($data_f->f_auteur=='1')){
+		else{
+			if ($sql_f_order!='')
+				$sql_f_order.=', u.lastname ASC, u.firstname ASC, u.id ASC ';
+			else
+				$sql_f_order.=' u.lastname ASC, u.firstname ASC, u.id ASC ';
+            $order=1;
+		}
+
 	}
 	//echo "<br />DEBUG :: filtres.php :: Ligne 198 :: FILTRES : WHERE=".htmlentities($sql_f_where)."<br />ORDER=".htmlentities($sql_f_order)."\n";
+	//exit;
 }
 
 ?>

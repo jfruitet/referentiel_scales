@@ -1,6 +1,10 @@
 <?php
 // referentiel module
 //
+
+$string['pagination_yes'] = 'Pagination display On';
+$string['pagination_no'] = 'Pagination display Off';
+
 $string['activitynumber'] = '{$a} activities.';
 $string['bilanactivity'] = 'Assessment';
 $string['modifactivity'] = 'Modify';

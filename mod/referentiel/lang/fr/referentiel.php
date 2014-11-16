@@ -2,6 +2,8 @@
 // ----------------
 // UTF-8 French
 //
+$string['pagination_yes'] = 'Affichage paginé';
+$string['pagination_no'] = 'Affichage non paginé';
 $string['bilanactivity'] = 'Bilan';
 $string['activitynumber'] = '{$a} activités.';
 $string['modifactivity'] = 'Modifier';

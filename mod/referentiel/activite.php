@@ -62,11 +62,12 @@ $sql='';
     $initiale   = optional_param('initiale','', PARAM_ALPHA); // selection apr les initiales du nom
     $userids    = optional_param('userids','', PARAM_TEXT); // id user selectionnes par les initiales du nom
 
-    $mode_select = optional_param('mode_select','', PARAM_ALPHANUMEXT);
+    $mode_select= optional_param('mode_select','', PARAM_ALPHANUMEXT);
     $select_acc = optional_param('select_acc', -1, PARAM_INT);      // accompagnement
-    $order    	  = optional_param('order', 0, PARAM_INT);
+    $order    	= optional_param('order', 0, PARAM_INT);
     $userbareme = optional_param('userbareme', 0, PARAM_INT); // si un bareme est utilise pour la saisie
 
+	$pagination= optional_param('pagination', 1, PARAM_INT);
 
     // Filtres
     require_once('filtres.php'); // Ne pas deplacer
@@ -685,6 +686,7 @@ $sql='';
 
     // DEBUG
 	// echo "<br>DEBUG :: 633:: RECORD ID USERS :<br>MODE:$mode MODEAFF:$modeaff\n";
+
 	if ($modeaff>=0){
     	// DEBUG
 		// echo "<br>DEBUG :: 636:: RECORD ID USERS :<br>MODE:$mode MODEAFF:$modeaff\n";
@@ -693,15 +695,17 @@ $sql='';
 		$records_id_users=referentiel_get_liste_users_pagination($course, $referentiel, ($isteacher || $iseditor|| $istutor), $userids, $userid_filtre, $gusers, $select_acc);
 		// afficher les activites des utilisateurs
         // DEBUG
-		// echo "<br>DEBUG :: 642 :: RECORD ID USERS :<br>\n";
-    	// print_object($records_id_users);
-		// exit;
+		//echo "<br>DEBUG :: 642 :: RECORD ID USERS :<br>\n";
+    	//print_object($records_id_users);
+
 		if ($records_id_users){
+        	// DEBUG
+			//echo "<br>DEBUG :: 706:: RECORD ID USERS :<br>\n";
+    	    //print_object($records_id_users);
 	    	if (!empty($referentiel->ref_referentiel)){
 				$params=array();
                 if ($sql_f_order==''){
-                    //$sql_order=''; //'  userid ASC, date_creation DESC ';
-                    $sql_order='  userid ASC, date_creation DESC ';
+                    $sql_order=''; //'  userid ASC, date_creation DESC ';
                 }
                 else{
                     $sql_order=$sql_f_order;
@@ -709,12 +713,12 @@ $sql='';
                 $params[]=$referentiel->ref_referentiel;
 
                 if (($modeaff>=0) && ($modeaff<3)) { // mode==listactivityall or mode==modifyactivity
-	                $sql = 'SELECT * FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
-                	$sql_count = 'SELECT COUNT(id) as nb FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
-				}
-               	$sql2 = 'SELECT DISTINCT userid AS userid, COUNT(id) AS activitynumber FROM {referentiel_activite}  WHERE ref_referentiel=? AND ';
+					// $sql = 'SELECT * FROM {referentiel_activite} WHERE ref_referentiel=? AND ';
+					$sql_count = 'SELECT COUNT(ra.id) as nb FROM {referentiel_activite} as ra WHERE ra.ref_referentiel=? AND ';
+                }
+				$sql2 = 'SELECT DISTINCT ra.userid AS userid, COUNT(ra.id) AS activitynumber  FROM {referentiel_activite} AS ra, {user} AS u WHERE ra.ref_referentiel=? AND ra.userid=u.id AND ';
 
-                $sql_users='';
+				$sql_users='';
 				if ($sql_order){
                 	$sql_where_order= ' '.$sql_f_where.' ORDER BY '.$sql_order;
                 }
@@ -727,30 +731,33 @@ $sql='';
                     $params[]=$rec->userid;
 
 					if (empty($sql_users)){
-                        $sql_users = " ((userid=?) ";
+                        $sql_users = " ((ra.userid=?) ";
                     }
                     else{
-                        $sql_users .= " OR (userid=?) ";
+                        $sql_users .= " OR (ra.userid=?) ";
                     }
                 }
 
                 if (!empty($sql_users)){
                     $sql_users .=") ";
-                    $sql=addslashes($sql.$sql_users.$sql_where_order);
-                    $sql2=addslashes($sql2.$sql_users);
-                    $sql_count=$sql_count.$sql_users.$sql_where_order;
-	                    // DEBUG
-    	                //echo "<br>DEBUG :: 738 :: Params<br />\n";
-						//print_object($params);
-						//echo "<br>DEBUG :: 740 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
-						// Liste d'enregistrements à afficher'
+                    //$sql=addslashes($sql.$sql_users.$sql_where_order); // MODIF JF 2014/11/14
+                    $sql=addslashes(trim($sql_where_order));
+					$sql2=addslashes($sql2.$sql_users);
+                    //$sql_count=$sql_count.$sql_users.$sql_where_order;
+					$sql_count=$sql_count.$sql_users;
+                    // DEBUG
+                    //echo "<br>DEBUG :: 643 :: Params<br />\n";
+					//print_object($params);
+
+                    //echo "<br>DEBUG :: 786 :: SQL&gt; ".htmlspecialchars($sql_count)."\n";
+                    //exit;
 					if ($rec=$DB->get_record_sql($sql_count, $params)){
                     	// DEBUG
-	                    //echo "<br>DEBUG :: 758 :: COUNT:<br>\n";
-    	                //print_object($rec);
-        	            $totalRecords=$rec->nb;
+                    	// echo "<br>DEBUG :: 689 :: COUNT:<br>\n";
+                    	// print_object($rec);
+                    	$totalRecords=$rec->nb;
 					}
-                    $sql2 .= ' GROUP BY userid ';
+					$sql2 .= ' GROUP BY ra.userid '. $sql_where_order;
                 }
             }
 
@@ -770,49 +777,56 @@ $sql='';
 			}
 
 			if ($totalRecords >0){
-            	// nombre de pages à afficher
-				$nombrePage = ceil((float)$totalRecords / (float) MAXPARPAGE);
-                $totalPage = min(MAXPAGE, $nombrePage);
-                $perPage=ceil((float)$totalRecords / (float)$totalPage);
-
-				/*
-            	$totalPage=1;
-            	$perPage=ceil((float)$totalRecords / (float)$totalPage);       // nombre d'enregistrements par page
-            	while ($perPage>MAXPARPAGE){
-                	$totalPage++;
-                	$perPage=ceil((float)$totalRecords / (float)$totalPage);       // nombre d'enregistrements par page
+	            if (empty($pagination)){
+					$nombrePage = 1;
+        	        $totalPage = 1;
+            	    $perPage=$totalRecords;
             	}
-				*/
-                //echo "<br />DEBUG :: 795 :: totalRecords:".$totalRecords." nombrePage:".$nombrePage." totalPage:".$totalPage." perPage:".$perPage." PageNo:".$pageNo."\n";
+				else{
+					// nombre de pages à afficher
+					$nombrePage = ceil((float)$totalRecords / (float) MAXPARPAGE);
+        	        $totalPage = min(MAXPAGE, $nombrePage);
+            	    $perPage=ceil((float)$totalRecords / (float)$totalPage);
+
+					/*
+	            	$totalPage=1;
+    	        	$perPage=ceil((float)$totalRecords / (float)$totalPage);       // nombre d'enregistrements par page
+        	    	while ($perPage>MAXPARPAGE){
+            	    	$totalPage++;
+                		$perPage=ceil((float)$totalRecords / (float)$totalPage);       // nombre d'enregistrements par page
+	            	}
+					*/
+        	        //echo "<br />DEBUG :: 710 :: totalRecords:".$totalRecords." nombrePage:".$nombrePage." totalPage:".$totalPage." perPage:".$perPage." PageNo:".$pageNo."\n";
+
+				}
 
 				if ($pageNo>$totalPage){
                     $pageNo=1;
 				}
                 //echo "<br />DEBUG :: 689 :: PageNo:".$pageNo."\n";
 				//exit;
-				// params
-				// $lparams=implode('|',$params);
-		    	//echo "<br />DEBUG :: 778 :: ".$lparams."\n";
-    			//echo "<br />DEBUG :: 862 :: ".urlencode($sql)."\n";
+		    	//echo "<br />DEBUG :: 820 :: ".$lparams."\n";
+    			//echo "<br />DEBUG :: 821 :: ".htmlentities($sql)."\n";
 				//exit;
 		    	$sql = str_replace(">","&gt;",$sql);    // hack
 		    	$sql = str_replace("<","&lt;",$sql);    // hack
 		    	$sql = str_replace("\n","",$sql);    // hack
 				// JavaScript Document
-				// echo "<br />DEBUG :: activite.php :: 775 :: ".htmlentities($sql)."\n";
+				//echo "<br />DEBUG :: 719 :: ".htmlentities($sql)."\n";
 				//echo "<br />DEBUG :: 862 :: ".urlencode($sql)."\n";
 				//exit;
 			    //$sql = str_replace('>','&gt;',$sql);    // hack
 			    //$sql = str_replace('<','&lt;',$sql);    // hack
-			    //$onload= " onload=\"javascript:ajaxPaging(pagename='".$pageName."',pageNo='1',instanceid='".$referentiel->id."',sql='".$sql."',div='".$divid."',totalPage='".$totalPage."',perPage='".$perPage."',selacc='".$select_acc."',modeaff='".$modeaff."') \"";
-				$ajaxvalue = "'".urlencode($pageName)."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."','".$userid_filtre."','".$order."'";
-				//$ajaxvalue = "'".$pageName."',1,".$referentiel->id.",'".$sql."','".$lparams."','".$divid."',".$totalPage.",".$perPage.",".$select_acc.",".$modeaff."";
-		    	//echo $ajaxvalue;
+				// MODIF JF 2014/11/14
+
+				$ajaxvalue = "'".urlencode($pageName)."','".$pageNo."','".$referentiel->id."','".$sql."','".$lparams."','".$divid."','".$totalPage."','".$perPage."','".$select_acc."','".$modeaff."','".$userid_filtre."','".$order."','".$pagination."'";
+				// $ajaxvalue = "'".$pageName."',1,".$referentiel->id.",'".$sql."','".$lparams."','".$divid."',".$totalPage.",".$perPage.",".$select_acc.",".$modeaff."";
+		//        echo "<br>DEBUG :: 834 :: Ajax; <br />\n";
+        //        echo $ajaxvalue;
+		//      	exit;
 				$onclick="javascript:ajaxPaging(".$ajaxvalue.");";
     			//$onclick="javascript:affiche2($value);";
 			}
-
-
         }
 	}
 
@@ -877,7 +891,7 @@ $sql='';
     $tab_onglets = new Onglets($context, $referentiel, $referentiel_referentiel, $cm, $course, $currenttab, $select_acc, $data_f, $mode);
     $tab_onglets->display();
 
-    echo '<div align="center"><h2><img src="'.$icon.'" border="0" title="" alt="" /> '.$stractivite.' '.$OUTPUT->help_icon('activiteh','referentiel').'</h2></div>'."\n";
+    echo "\n<br />\n".'<div align="center"><h2><img src="'.$icon.'" border="0" title="" alt="" /> '.$stractivite.' '.$OUTPUT->help_icon('activiteh','referentiel').'</h2></div>'."\n";
     // JF 2011/11/29 - Affiche destinataires en cas de notification
     if ($mailnow && $activite_id) { // id 	activite
         $destinataires=referentiel_get_referents_notification($DB->get_record('referentiel_activite', array('id' => $activite_id)));
@@ -939,6 +953,17 @@ $sql='';
 				if ($records_id_users){
 					// Afficher
 					// ESPACE DEDIE A L'INSERTION AJAX
+echo '<div align="center">';
+if ($pagination){
+	echo '<a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;pagination=0&amp;select_acc='.$select_acc.'&amp;userid='.$userid.'&amp;mode='.$mode.'&amp;f_auteur='.$data_f->f_auteur.'&amp;f_validation='.$data_f->f_validation.'&amp;f_referent='.$data_f->f_referent.'&amp;f_date_modif='.$data_f->f_date_modif.'&amp;f_date_modif_student='.$data_f->f_date_modif_student.'&amp;sesskey='.sesskey().'">'.get_string('pagination_no','referentiel').'</a> &nbsp; &nbsp;
+<a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;pagination=1&amp;select_acc='.$select_acc.'&amp;userid='.$userid.'&amp;mode='.$mode.'&amp;f_auteur='.$data_f->f_auteur.'&amp;f_validation='.$data_f->f_validation.'&amp;f_referent='.$data_f->f_referent.'&amp;f_date_modif='.$data_f->f_date_modif.'&amp;f_date_modif_student='.$data_f->f_date_modif_student.'&amp;sesskey='.sesskey().'"><b>'.get_string('pagination_yes','referentiel').'</b></a>'."\n";
+}
+else{
+	echo '<a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;pagination=0&amp;select_acc='.$select_acc.'&amp;userid='.$userid.'&amp;mode='.$mode.'&amp;f_auteur='.$data_f->f_auteur.'&amp;f_validation='.$data_f->f_validation.'&amp;f_referent='.$data_f->f_referent.'&amp;f_date_modif='.$data_f->f_date_modif.'&amp;f_date_modif_student='.$data_f->f_date_modif_student.'&amp;sesskey='.sesskey().'"><b>'.get_string('pagination_no','referentiel').'</b></a> &nbsp; &nbsp;
+<a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;pagination=1&amp;select_acc='.$select_acc.'&amp;userid='.$userid.'&amp;mode='.$mode.'&amp;f_auteur='.$data_f->f_auteur.'&amp;f_validation='.$data_f->f_validation.'&amp;f_referent='.$data_f->f_referent.'&amp;f_date_modif='.$data_f->f_date_modif.'&amp;f_date_modif_student='.$data_f->f_date_modif_student.'&amp;sesskey='.sesskey().'">'.get_string('pagination_yes','referentiel').'</a>'."\n";
+}
+echo '</div>';
+
 ?>
 <!-- Espace insertion -->
 <div id="pagin" class="pagination">

@@ -33,14 +33,15 @@ include('print_lib_task.php');	// AFFICHAGES TACHES
 
 $instanceid   = optional_param('instanceid', 0, PARAM_INT);   // referentiel instance id
 $userid       = optional_param('userid', 0, PARAM_INT);   // userid if selected
-$sql          = optional_param('sql','', PARAM_TEXT);
+$sql_where_order = optional_param('sql','', PARAM_TEXT);   // Version 2014/11/14
 $lparams      = optional_param('lparams','', PARAM_TEXT);
 $pageNo       = optional_param('pageNo', 0, PARAM_INT);
 $perPage      = optional_param('perPage', 1, PARAM_INT);
-$totalPage     = optional_param('totalPage', 0, PARAM_INT);
+$totalPage    = optional_param('totalPage', 0, PARAM_INT);
 $selacc       = optional_param('selacc', 0, PARAM_INT);
 $modeaff      = optional_param('modeaff', 0, PARAM_INT);
 $order    	  = optional_param('order', 0, PARAM_INT);
+$pagination   = optional_param('pagination', 1, PARAM_INT);
 
 	if ($modeaff==1){
 		$mode='listactivityall';
@@ -53,7 +54,7 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 	}
 
 // DEBUG
-// echo "DEBUG :: list_activites_users.php :: 56 :: <br> $instanceid , ".htmlspecialchars($sql).",$lparams, $pageNo, $perPage, $totalPage\n";
+// echo "DEBUG :: list_activites_users.php :: 42 :: <br> $instanceid , ".htmlspecialchars($sql).",$lparams, $pageNo, $perPage\n";
 // echo "<br>MODEAFF : $modeaff\n";
 // echo "<br>SELECT_ACC : $selacc\n";
 //exit;
@@ -84,23 +85,10 @@ $order    	  = optional_param('order', 0, PARAM_INT);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 	$PAGE->set_context($context);
 
-    // Requête
-    if (!empty($sql)){
-	    //echo "<br />DEBUG :: 46 :: Length : ".strlen($sql)." :  ".htmlspecialchars($sql)."\n";
-    	//$sql = stripslashes(urldecode($sql));
-        $sql = stripslashes($sql);
-	    //echo "<br />DEBUG :: 48 :: Length : ".strlen($sql)." :  ".htmlspecialchars($sql)."\n";
-		$sql = str_replace('&gt;','>',$sql);    // hack
-        $sql = str_replace('&lt;','<',$sql);    // hack
-
-    	//echo "<br />DEBUG :: 95 :: Length : ".strlen($sql)." : ".htmlspecialchars($sql)."\n";
-    }
-
-	//echo "<br />DEBUG :: list_activity_users :: 98<br />\n";
     $t_users=array();
 	$t_users_count=array();
+	$params=array();	
     if (!empty($lparams)){
-		//  1|3:1|4:1|5:1|6:1|7:1|8:5|12:2|11:0|
 		$listeparams=explode('|',$lparams);
 		foreach($listeparams as $aparam){
 			if ($aparam){
@@ -116,7 +104,7 @@ $order    	  = optional_param('order', 0, PARAM_INT);
                 	$t_users_count[]=$aua[1];
 				}
 			}
-		}
+		}		
 	}
 	/*
 	echo "<br />T_USERS\n";
@@ -127,6 +115,46 @@ $order    	  = optional_param('order', 0, PARAM_INT);
     print_object($params);
 	//exit;
 	*/
+
+    // Requête
+	// Version 2014/11/14
+    if (!empty($sql_where_order)){
+    	$sql_where_order = stripslashes(urldecode($sql_where_order));
+	    // echo "<br />DEBUG :: 110 :: Length : ".strlen($sql_where_order)." :  ".htmlspecialchars($sql_where_order)."\n";
+		$sql_where_order = str_replace('&gt;','>',$sql_where_order);    // hack
+        $sql_where_order = str_replace('&lt;','<',$sql_where_order);    // hack
+	}
+
+	// generer la requete.
+	$refrefid=$params[0];
+
+    $users=array();
+	for ($i=1; $i<count($params); $i++){
+		$users[]=$params[$i];
+	}
+
+	$sql = 'SELECT ra.* FROM {referentiel_activite} AS ra, {user} AS u WHERE ref_referentiel=? AND ra.userid=u.id AND ';
+    $sql_users='';
+ 	foreach ($users as $userid){
+		if (empty($sql_users)){
+        	$sql_users = " ((userid=?) ";
+        }
+        else{
+        	$sql_users .= " OR (userid=?) ";
+        }
+    }
+
+    if (!empty($sql_users)){
+        $sql_users .=") ";
+        $sql=addslashes($sql.$sql_users.' '.$sql_where_order);
+        //DEBUG
+        //echo "<br>DEBUG :: 123 :: Params<br />\n";
+		//print_object($params);
+		//echo "<br>DEBUG :: 125 :: SQL&gt; ".htmlspecialchars($sql)."\n";
+
+	}
+
+
 	// DEBUG
     //echo "<br>DEBUG :: list_activites_users.php :: 697 :: Params<br />\n";
 	//print_object($params);
@@ -134,23 +162,31 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 	$fin=  $deb + $perPage;
 	$limit = ' LIMIT '.$deb.', '.$fin;
     $sql.=$limit;
-    //echo "<br />DEBUG :: lib_activites_users.php :: 136 <br /> ".htmlspecialchars($sql)."\n";
-
+    //echo "<br />DEBUG :: lib_activites_users.php :: 164 :: Length : ".strlen($sql)." <br /> ".htmlspecialchars($sql)."\n";
+	//exit;
+    
+	$userid_old=0;  // pour la jauge
+	$index_user=-1;
+    $s_no_activity='';
+	$first_activity=1;
+	$user_nb_activities_displayed=0;
     if ($recs=$DB->get_records_sql($sql, $params)){
-		// DEBUG
-		//echo "<br />DEBUG :: list_activites_users.php :: 113 : RECORD<br />\n";
+		//echo "<br />DEBUG :: list_activites_users.php :: 140 : RECORD<br />\n";
 		//print_object( $recs);
 
-		// affichage
-		// preparer les variables globales pour Overlib
-        // DEBUG
-		//echo "<br>DEBUG :: 696:: CROISSANT : $order<br>\n";
+        // MODIF JF 2014/11/15
+		// Le tri est fait dans la requête SQL
+		/**************************************
 		if (!empty($order)) {
         	$recs=referentiel_order_users($recs, $order);
  			//echo "<br />DEBUG :: list_activites_users.php :: 122 : RECORD TRIES<br />\n";
 			//print_object( $recs);
 			//exit;
 		}
+		***/
+
+		// affichage
+		// preparer les variables globales pour Overlib
 		referentiel_initialise_descriptions_items_referentiel($referentiel_referentiel->id);
         //Bareme
 		$bareme=NULL;
@@ -167,11 +203,6 @@ $order    	  = optional_param('order', 0, PARAM_INT);
                 $bareme=referentiel_get_bareme($rec_assoc->refscaleid);
 			}
 		}
-
-		// compteurs pour afficher les jauges et activites a bon escient
-        $userid_old=0;
-		$index_user=-1;
-        $s_no_activity='';
 
         if ($modeaff==0){
 			// formulaire global
@@ -196,7 +227,6 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 			    // Jauge d'activite
 				if ($userid_old!=$record_a->userid){
                     $userid_old=$record_a->userid;
-
 					echo '<tr><td class="centree" colspan="8">'."\n";
                     echo get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id)."\n";
 					echo '</td></tr>'."\n";
@@ -235,21 +265,25 @@ $order    	  = optional_param('order', 0, PARAM_INT);
                 $index_user=get_index($record_a->userid, $t_users);
 				if ($userid_old!=$record_a->userid){
                     $userid_old=$record_a->userid;
-	                //if (($modeaff==2) && (($pageNo==1) || ($index_old>0))){ // Afficher les prédécesseurs sans activite
-					if ($modeaff==2){
-						$s_no_activity='';
-						$k=$index_user-1; // rechercher les prédécesseurs sans activite
-						while (($k>=0) &&  ($t_users_count[$k]==0)){
-							$s_no_activity='<div align="center" class="surligne">'.referentiel_print_aucune_activite_user($t_users[$k]).'</div><br />'."\n" . $s_no_activity;
-							$k--;
+                    $user_nb_activities_displayed=0;
+					if (($modeaff==2) && ($pagination==0) && !empty($first_activity)){ // uniquement pour le premier
+						if ($user_nb_activities_displayed==0) {   // Afficher les predecesseurs sans activite avant d'afficher les declarations de celui-ci
+                            $s_no_activity='';
+							$k=$index_user-1; // rechercher le successeur sans activite
+	     					while ($k>0 && ($t_users_count[$k]==0)){
+								$s_no_activity='<div align="center" class="grise">'.referentiel_print_aucune_activite_user($t_users[$k]).'</div>'."\n".$s_no_activity;
+								$k--;
+							}
+                            if (!empty($s_no_activity)){
+								echo $s_no_activity;
+							}
 						}
-                		if (!empty($s_no_activity)) {
-    	    				echo $s_no_activity;
-						}
+                        $first_activity=0;
 					}
-					echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id).'</div>'."\n";
 
+					echo '<div align="center">'.get_string('competences_declarees','referentiel', '<span class="bold">'.referentiel_get_user_info($record_a->userid).'</span>')."\n".referentiel_print_jauge_activite($record_a->userid, $referentiel_referentiel->id).'</div>'."\n";
                     if ($modeaff==2){ //
+
  						if (($index_user>=0) && isset($t_users_count[$index_user]) && $t_users_count[$index_user]>0){ // nb activites
 							echo '<div align="center"><i>'.get_string('activitynumber','referentiel',$t_users_count[$index_user]).'</i></div>'."\n";
 						}
@@ -266,28 +300,21 @@ $order    	  = optional_param('order', 0, PARAM_INT);
                     echo '<div align="center">'.get_string('activite_exterieure','referentiel')."</div>\n";
 				}
 				echo '<br />'."\n";
-			}
+                $user_nb_activities_displayed++;
 
-			if (($modeaff==2) && ($pageNo==$totalPage)){ // rechercher les successeurs sans activite
-                //echo "DEBUG 274 :<br />INDEX_USER $index_user\n";
-				if ($index_user>=0){
-                	$s_no_activity='';
-					$k=$index_user;
-					while ($k<count($t_users)){
-						if ($t_users_count[$k]==0){
-							$s_no_activity.='<div align="center" class="surligne">'.referentiel_print_aucune_activite_user($t_users[$k]).'</div><br />'."\n";
+				if (($modeaff==2) && ($pagination==0)){
+					if ($user_nb_activities_displayed == $t_users_count[$index_user]) {   // Afficher les successeurs sans activite
+						$k=$index_user+1; // rechercher le successeur sans activite
+	     				while ($k<count($t_users) && ($t_users_count[$k]==0)){
+							echo '<div align="center" class="grise">'.referentiel_print_aucune_activite_user($t_users[$k]).'</div>'."\n";
+							$k++;
 						}
-						$k++;
-					}
-                	if (!empty($s_no_activity)) {
-    	    			echo $s_no_activity;
 					}
 				}
 			}
         }
-
     }
-    
+ 
 	// -------------------------------------
 	function get_index($userid, $t_users){
 		$i=0;
@@ -299,4 +326,5 @@ $order    	  = optional_param('order', 0, PARAM_INT);
 		}
 		return -1;
 	}
+ 
 ?>

@@ -105,7 +105,7 @@ global $COURSE;
 
         echo referentiel_modifie_entete_activite_complete_filtre("activite.php?id=$cm->id&amp;select_acc=$select_acc&amp;courseid=$course->id&amp;userid=$userid_filtre&amp;mode=$mode&amp;sesskey=".sesskey(), $data_f, false, false);
 		//echo referentiel_print_enqueue_activite();
-        echo '<br /><br /><br /><br />'."\n";
+        echo '<br /><br />'."\n";
  	}
 }
 
@@ -355,14 +355,10 @@ $record_id_users=array();
 					$record_id_users[]=$a;
 				}
 			}
-			// Ajouter l'utilisateur courant pour qu'il voit ses activites
+			// Ajouter l'utilisateur courant pour qu'il voit ses activités
 			$a = new Object();
 			$a->userid=$USER->id;
 			$record_id_users[]=$a;
-        	// DEBUG
-			//echo "<br>DEBUG :: 363 :: prin_lib_users.php :: <br>\n";
-    		//print_object($record_id_users);
-			//exit;
             echo referentiel_select_users_activite_accompagnes($userid_filtre, $select_acc, $mode);
             echo referentiel_select_users_activite_2($record_id_users, $userid_filtre, $select_acc, $mode, $initiale);
 		}
@@ -387,7 +383,6 @@ $record_id_users=array();
             // retourne les etudiants du cours ou userid_filtre si != 0
             $record_id_users = referentiel_get_students_course($course->id, $userid_filtre, 0);
         }
-
 		// afficher le groupe courant
 		if ($record_id_users && $gusers){ // liste des utilisateurs du groupe courant
 			$record_users  = array_intersect($gusers, array_keys($record_id_users));
@@ -416,7 +411,6 @@ $record_id_users=array();
 			$a->userid=$USER->id;
 			$record_id_users[]=$a;
 		}
-
 	}
 	else{
 		// seulement l'utilisateur courant
@@ -466,96 +460,6 @@ $s="";
 	return $s;
 }
 
-// ----------------------
-function referentiel_order_users($recs_activity, $order=0){
-// retourne une liste d'activit‚s ordonn‚e par utilisateur
-$t_users=array();
-$t_users_firstname=array();
-$t_users_lastname=array();
-    if ($recs_activity){
-	    foreach ($recs_activity as $record_a) {   // liste d'activites
-   			//print_object($record_a);
-
-			if (!empty($record_a->userid)){
-				$firstname= referentiel_get_user_prenom($record_a->userid);
-                $lastname = referentiel_get_user_nom($record_a->userid);
-                //$t_activity[]=$record_a;
-			    $t_users[]= array('id' => $record_a->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'activity' => $record_a );
-			    $t_users_lastname[] = $lastname;
-			    $t_users_firstname[]= $firstname;
-            }
-		}
-		if ($order==-1){
-			array_multisort($t_users_lastname, SORT_DESC, $t_users_firstname, SORT_DESC, $t_users);
-		}
-		else{
-            array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
-		}
-		$recs_activity=array();
-		for($i=0; $i< count($t_users); $i++){
-			$recs_activity[]=$t_users[$i]['activity'];
-		}
-	}
-	return $recs_activity;
-}
-
-// ----------------------
-function referentiel_order_users_count($records_id_users, $recs_activity, $order=0){
-
-// retourne une liste de bilans d'activites ordonn‚e par utilisateur
-$recs=array();
-$t_users=array();
-$t_users_firstname=array();
-$t_users_lastname=array();
-	if ($records_id_users){
-		foreach ($records_id_users as $record_user) {   // initialiser
-        	if (!empty($record_user->userid)){
-				$a = new Object();
-				$a->activitynumber = 0;
-            	$a->userid = $record_user->userid;
-				$recs[$record_user->userid]=$a;
-			}
-		}
-	}
-	//echo "<br />2231 \n";
-	//print_object($recs);
-
-    if ($recs_activity){
-	    foreach ($recs_activity as $record_a) {   // liste d'activites
-   			//print_object($record_a);
-			if (!empty($record_a->userid)){
-                $recs[$record_a->userid]->activitynumber=$record_a->activitynumber;
-			}
-		}
-	}
-    //echo "<br />2242 \n";
-	//print_object($recs);
-
-    if ($recs){
-	    foreach ($recs as $record) {   // liste d'activites
-   			//print_object($record);
-			if (!empty($record->userid)){
-				$firstname= referentiel_get_user_prenom($record->userid);
-                $lastname = referentiel_get_user_nom($record->userid);
-                //$t_activity[]=$record_a;
-			    $t_users[]= array('id' => $record->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'activity' => $record );
-			    $t_users_lastname[] = $lastname;
-			    $t_users_firstname[]= $firstname;
-            }
-		}
-		if ($order==-1){
-			array_multisort($t_users_lastname, SORT_DESC, $t_users_firstname, SORT_DESC, $t_users);
-		}
-		else{
-            array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
-		}
-		$recs=array();
-		for($i=0; $i< count($t_users); $i++){
-			$recs[]=$t_users[$i]['activity'];
-		}
-	}
-	return $recs;
-}
 
 
 // ----------------------
@@ -1359,7 +1263,7 @@ print_object($CFG);
 		$s.='</td>'."\n".'<td align="center">';
 		$s.=$user_info;
         // MODIF JF 2012/05/06
-        $s.=referentiel_liste_groupes_user($ref_course, $userid);
+        $s.=' <br /> '.referentiel_liste_groupes_user($ref_course, $userid);
 		$s.='</td>'."\n".'<td align="center">';
 		$s.=$url_course.'<br />'.$url_instance;
 		$s.='</td>'."\n".'<td align="center">';
@@ -1739,16 +1643,6 @@ function referentiel_affiche_competences_declarees($separateur1, $separateur2, $
 
 
 // Menu
-// Menu
-// ----------------------------------------------------------
-function referentiel_menu_activite_user($cm, $context, $userid, $instanceid, $select_acc, $mode){
-	global $CFG;
-	global $OUTPUT;
-	echo '<div align="center">';
-    echo '&nbsp; <a href="'.$CFG->wwwroot.'/mod/referentiel/activite.php?id='.$cm->id.'&amp;select_acc='.$select_acc.'&amp;userid='.$userid.'&amp;mode=listactivityall&amp;old_mode='.$mode.'&amp;sesskey='.sesskey().'"><img src="'.$OUTPUT->pix_url('search','referentiel').'" alt="'.get_string('plus', 'referentiel').'" title="'.get_string('plus', 'referentiel').'" /></a>'."\n";
-	echo '</div>'."\n";
-}
-
 // ----------------------------------------------------------
 function referentiel_menu_activite($cm, $context, $activite_id, $userid, $referentiel_instance_id, $approved, $select_acc=0, $detail=true, $mode='updateactivity'){
 	global $CFG;
@@ -1823,8 +1717,6 @@ function referentiel_selection_liste_codes_item_competence($separateur, $liste){
 	}
 	return $nl;
 }
-
-// MODIF JF 2012/02/24
 // Nouvelle boite de saisie des items
 // ----------------------------------------------------
 function referentiel_selection_liste_codes_item_hierarchique($refrefid, $fonction=0){
@@ -2006,8 +1898,9 @@ function referentiel_get_liens_documents($activite_id, $userid, $context){
         if ($links_documents){
             $s.= '<ul>'.$links_documents.'</ul>'."\n";
         }
-    }
-    $s.= '</p>'."\n";
+    	$s.= '</p>'."\n";
+	}
+
     return $s;
 }
 
@@ -2236,6 +2129,40 @@ function referentiel_ajout_document($record, $mode, $select_acc=0){
     return $s;
 }
 
+// ----------------------
+function referentiel_order_users($recs_activity, $order=0){
+// retourne une liste d'activit‚s ordonn‚e par utilisateur
+$t_users=array();
+$t_users_firstname=array();
+$t_users_lastname=array();
+    if ($recs_activity){
+	    foreach ($recs_activity as $record_a) {   // liste d'activites
+   			//print_objcet($record_a);
+
+			if (!empty($record_a->userid)){
+				$firstname= referentiel_get_user_prenom($record_a->userid);
+                $lastname = referentiel_get_user_nom($record_a->userid);
+                //$t_activity[]=$record_a;
+			    $t_users[]= array('id' => $record_a->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'activity' => $record_a );
+			    $t_users_lastname[] = $lastname;
+			    $t_users_firstname[]= $firstname;
+            }
+		}
+		if ($order==-1){
+			array_multisort($t_users_lastname, SORT_DESC, $t_users_firstname, SORT_ASC, $t_users);
+		}
+		else{
+            array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
+		}
+		$recs_activity=array();
+		for($i=0; $i< count($t_users); $i++){
+			$recs_activity[]=$t_users[$i]['activity'];
+		}
+	}
+	return $recs_activity;
+}
+
+
 // Affiche une ligne de la table quand il n'y a pas d'activite pour userid
 // *****************************************************************
 // input @param a user id                                          *
@@ -2297,5 +2224,134 @@ function referentiel_print_bilan_activite_user($record_a, $courseid){
     return $s;
 }
 
+// ----------------------
+function referentiel_order_users_count($records_id_users, $recs_activity, $order=0){
 
+// retourne une liste de bilans d'activites ordonnee par utilisateur
+$recs=array();
+$t_users=array();
+$t_users_firstname=array();
+$t_users_lastname=array();
+	// Initialisation
+	if ($records_id_users){
+		foreach ($records_id_users as $record_user) {   // initialiser
+        	if (!empty($record_user->userid)){
+				$a = new Object();
+				$a->activitynumber = 0;
+            	$a->userid = $record_user->userid;
+				$recs[$record_user->userid]=$a;
+			}
+		}
+	}
+	//echo "<br />2231 \n";
+	//print_object($recs);
+
+    if ($recs_activity){
+	    foreach ($recs_activity as $record_a) {   // liste d'activites
+   			//print_object($record_a);
+			if (!empty($record_a->userid)){
+                $recs[$record_a->userid]->activitynumber=$record_a->activitynumber;
+			}
+		}
+	}
+    //echo "<br />print_lib_activite.php 2260<br />\n";
+	//print_object($recs);
+	// Attribuer la page
+
+
+	// Odonner les utilisateurs
+    if ($recs){
+	    foreach ($recs as $record) {   // liste d'activites
+   			//print_object($record);
+			if (!empty($record->userid)){
+				$firstname= referentiel_get_user_prenom($record->userid);
+                $lastname = referentiel_get_user_nom($record->userid);
+                //$t_activity[]=$record_a;
+			    $t_users[]= array('id' => $record->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'activity' => $record );
+			    $t_users_lastname[] = $lastname;
+			    $t_users_firstname[]= $firstname;
+            }
+		}
+		if ($order==-1){
+			array_multisort($t_users_lastname, SORT_DESC, $t_users_firstname, SORT_DESC, $t_users);
+		}
+		else{
+            array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
+		}
+		$recs=array();
+		for($i=0; $i< count($t_users); $i++){
+			$recs[]=$t_users[$i]['activity'];
+		}
+	}
+	return $recs;
+}
+
+/******************
+// ----------------------
+function referentiel_order_users_count_new($records_id_users, $recs_activity, $order=0, $perPage, $totalPage){
+
+// retourne une liste de bilans d'activites ordonnee par utilisateur
+$recs=array();
+$t_users=array();
+$t_users_firstname=array();
+$t_users_lastname=array();
+	// Initialisation
+	if ($records_id_users){
+		foreach ($records_id_users as $record_user) {   // initialiser
+        	if (!empty($record_user->userid)){
+				$a = new Object();
+				$a->activitynumber = 0;
+                $a->pagemin=0;
+				$a->pagemax=0;
+            	$a->userid = $record_user->userid;
+				$recs[$record_user->userid]=$a;
+			}
+		}
+	}
+	//echo "<br />2231 \n";
+	//print_object($recs);
+    $nbpagesaffichees=0;
+    if ($recs_activity){
+	    foreach ($recs_activity as $record_a) {   // liste d'activites
+   			//print_object($record_a);
+			if (!empty($record_a->userid)){
+                $recs[$record_a->userid]->activitynumber=$record_a->activitynumber;
+                $recs[$record_a->userid]->pagemin=ceil((float)$nbpagesaffichees / (float) $perPage);
+				$nbpagesaffichees+=$record_a->activitynumber;
+                $recs[$record_a->userid]->pagemax=ceil((float)$nbpagesaffichees / (float) $perPage);
+			}
+		}
+	}
+    //echo "<br />print_lib_activite.php 2260<br />\n";
+	//print_object($recs);
+	// Attribuer la page
+
+
+	// Odonner les utilisateurs
+    if ($recs){
+	    foreach ($recs as $record) {   // liste d'activites
+   			//print_object($record);
+			if (!empty($record->userid)){
+				$firstname= referentiel_get_user_prenom($record->userid);
+                $lastname = referentiel_get_user_nom($record->userid);
+                //$t_activity[]=$record_a;
+			    $t_users[]= array('id' => $record->userid, 'lastname' => $lastname, 'firstname' => $firstname, 'activity' => $record );
+			    $t_users_lastname[] = $lastname;
+			    $t_users_firstname[]= $firstname;
+            }
+		}
+		if ($order==-1){
+			array_multisort($t_users_lastname, SORT_DESC, $t_users_firstname, SORT_DESC, $t_users);
+		}
+		else{
+            array_multisort($t_users_lastname, SORT_ASC, $t_users_firstname, SORT_ASC, $t_users);
+		}
+		$recs=array();
+		for($i=0; $i< count($t_users); $i++){
+			$recs[]=$t_users[$i]['activity'];
+		}
+	}
+	return $recs;
+}
+****************/
 ?>
