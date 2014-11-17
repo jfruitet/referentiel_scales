@@ -116,32 +116,41 @@ global $DB;
 }
     
 
-
 // -----------------------
 function referentiel_get_all_accompagnements($course_id, $referentiel_instance_id){
 global $DB;
 	if (!empty($referentiel_instance_id) && !empty($course_id)){
         $params= array("refid" => "$referentiel_instance_id", "courseid" => "$course_id");
-        $sql="SELECT * FROM {referentiel_accompagnement}  WHERE ref_instance=:refid
- AND courseid = :courseid ORDER BY userid ASC, teacherid ASC";
+        list($sort, $sortparams) = users_order_by_sql('u');
+        $params += $sortparams;
+        $sql="SELECT ra.* FROM {referentiel_accompagnement} AS ra, {user} AS u
+ WHERE ra.ref_instance=:refid
+ 	AND ra.courseid=:courseid AND u.id=ra.userid
+ ORDER BY $sort, ra.teacherid ASC";
 		return $DB->get_records_sql($sql, $params);
     }
     return NULL;
 }
 
+
 // -----------------------
 function referentiel_get_accompagnements_teacher($referentiel_instance_id, $course_id, $ref_teacher) {
 // retourne la liste des id des accompagnes
-// 
+//
 global $DB;
 	if (!empty($referentiel_instance_id) && !empty($course_id) && !empty($ref_teacher)){
         $params= array("refid" => "$referentiel_instance_id", "courseid" => "$course_id", "teacherid" => "$ref_teacher");
-        $sql="SELECT userid FROM {referentiel_accompagnement}
- WHERE ref_instance=:refid AND courseid=:courseid AND teacherid=:teacherid ORDER BY userid ASC ";
+        list($sort, $sortparams) = users_order_by_sql('u');
+        $params += $sortparams;
+        $sql="SELECT ra.userid FROM {referentiel_accompagnement} AS ra, {user} AS u
+ WHERE ra.ref_instance=:refid
+ 	AND ra.courseid=:courseid AND u.id=ra.userid AND ra.teacherid=:teacherid
+ ORDER BY $sort ";
         return $DB->get_records_sql($sql, $params);
   }
   return NULL;
 }
+
 
 // -----------------------
 function referentiel_has_pupils($referentiel_instance_id, $course_id, $ref_teacher) {
